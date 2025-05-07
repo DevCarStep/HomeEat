@@ -15,7 +15,7 @@ canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightt
 canvas.pack(anchor="nw", side=LEFT)
 
 adress = "Луначарского, 66"
-label = ttk.Label(upper_frame, text=adress, background="white")
+label = ttk.Label(upper_frame, text=adress, background="white", font= ("Arial", 24))
 label.pack()
 
 user_btn = ttk.Button(upper_frame, text="A")
@@ -27,6 +27,14 @@ logo_label = ttk.Label(upper_frame, image=logo)
 canvas.create_image(36, 36, image=logo)
 #logo_label.pack(anchor="nw", side=LEFT)
 
-upper_frame.pack(anchor=N, fill=X, padx=8, pady=8)
+upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
+
+separation_line = Canvas(width=1170, height=1, background="black")
+separation_line.pack()
+
+main_frame = ttk.Frame()
+
+scrollbar = ttk.Scrollbar(orient="vertical")
+scrollbar.pack(side=RIGHT, fill=Y)
 
 root.mainloop()
