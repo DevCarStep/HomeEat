@@ -33,8 +33,7 @@ user_canvas.bind("<Enter>", BrightlessUp)
 user_canvas.bind("<Leave>", BrightlessDown)
 
 adress = "Луначарского, 66"
-label = ttk.Label(upper_frame, text=adress, background="white", font= ("Arial", 24))
-label.pack()
+label = ttk.Label(upper_frame, text=adress, background="white", font= ("Arial", 24)).pack()
 
 # user_btn = ttk.Button(upper_frame, text="A")
 # user_btn.place(height=60, width=60, anchor=NE)
@@ -47,13 +46,18 @@ canvas.create_image(36, 36, image=logo)
 
 upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 
-separation_line = Canvas(width=1170, height=1, background="black")
-separation_line.pack()
+separation_line = Canvas(width=1170, height=1, background="black").pack()
 
-main_canvas = Canvas()
+main_canvas = Canvas(scrollregion=(0, 0, 5000, 5000))
 main_frame = ttk.Frame(master=main_canvas)
 def CreateDishWidget():
     element = ttk.Frame(master=main_frame, height=250, width=210, borderwidth=1, relief=SOLID)
+    element.pack_propagate(False) 
+    photo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
+    photo_canvas = Canvas(element, width=190, height=190)
+    photo_canvas.pack(pady=8)
+    photo_canvas.create_image(95, 95, image=photo)
+    name_label = ttk.Label(master=element, text="nullreference", font=("Arial", 16)).pack()
     return element
 for i in range(4):
     for j in range(5):
