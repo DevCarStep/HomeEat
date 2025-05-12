@@ -18,12 +18,11 @@ canvas.pack(anchor="nw", side=LEFT)
 def UserCircleClick(event):
     showinfo(title="Информация", message="Кликер работает!")
 def BrightlessUp(event):
-    more_bright = int(user_collor, base=16) + int(222222, base=16)
+    more_bright = int(str(user_collor)) + int("222222")
     canvas.itemconfigure("weakbutton", fill="#" + str(more_bright))
-    print(more_bright)
-def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill=user_collor)
+def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill="#" + str(user_collor))
 username = "Абчихба"
-user_collor = "777777"
+user_collor = int("777777")
 user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
 user_canvas.pack(anchor=NE, side=RIGHT)
 idOval = user_canvas.create_oval(2, 2, 58, 58, fill="#777777", outline="#777777", tags=["clickable", "weakbutton"])
@@ -51,9 +50,20 @@ upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 separation_line = Canvas(width=1170, height=1, background="black")
 separation_line.pack()
 
-main_frame = ttk.Frame()
-
-scrollbar = ttk.Scrollbar(orient="vertical")
+main_canvas = Canvas()
+main_frame = ttk.Frame(master=main_canvas)
+def CreateDishWidget():
+    element = ttk.Frame(master=main_frame, height=250, width=210, borderwidth=1, relief=SOLID)
+    return element
+for i in range(4):
+    for j in range(5):
+        element = CreateDishWidget()
+        element.grid(row=i, column=j, padx=5, pady=5, ipadx=6, ipady=6, sticky= EW)
+scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=main_canvas.yview)
 scrollbar.pack(side=RIGHT, fill=Y)
+main_frame.pack(fill=Y)
+main_canvas.pack(fill=Y)
+main_canvas["yscrollcommand"] = scrollbar.set
+
 
 root.mainloop()
