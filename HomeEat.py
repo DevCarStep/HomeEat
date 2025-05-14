@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showinfo
+
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
@@ -15,13 +16,17 @@ upper_frame_style.configure("TFrame", background="white")
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
 
+username = "Абчихба"
 def UserCircleClick(event):
-    showinfo(title="Информация", message="Кликер работает!")
+    user_window = Tk()
+    user_window.title(username)
+    user_window.geometry("1800x1000")
+    user_window.resizable(False, True)
+    user_window.grab_set()
 def BrightlessUp(event):
     more_bright = int(str(user_collor)) + int("222222")
     canvas.itemconfigure("weakbutton", fill="#" + str(more_bright))
 def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill="#" + str(user_collor))
-username = "Абчихба"
 user_collor = int("777777")
 user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
 user_canvas.pack(anchor=NE, side=RIGHT)
