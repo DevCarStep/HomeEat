@@ -17,7 +17,12 @@ canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightt
 canvas.pack(anchor="nw", side=LEFT)
 
 username = "Абчихба"
+phone = "+7 800 555 35 35"
+email = "abjihba@hotmail.ua"
 def UserCircleClick(event):
+    user_window = UserWindowCreate()
+    return user_window
+def UserWindowCreate():
     user_window = Toplevel(root)
     user_window.title(username)
     user_window.geometry("1800x1000")
@@ -41,11 +46,27 @@ def UserCircleClick(event):
 
     upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 
-    main_canvas = Canvas()
+    main_canvas = Canvas(user_window)
     main_frame = ttk.Frame(master=main_canvas)
     
-    main_frame.pack(fill=Y)
+    username_lamel = ttk.Label(main_frame, text=username, font=("Arial", 20), anchor=NE, side=RIGHT).pack()
+    phone_label = ttk.Label(main_frame, text=phone, font=("Arial", 20), anchor=NE, side=RIGHT).pack()
+    email_label = ttk.Label(main_frame, text=email, font=("Arial", 20), anchor=NE, side=RIGHT).pack()
+    
+    order_history = ttk.Label(main_frame, text="История заказов", font=("Arial", 22), anchor=NW, side=LEFT).pack()
+    promocodes = ttk.Label(main_frame, text="Промокоды", font=("Arial", 22), anchor=NW, side=LEFT).pack()
+    collections = ttk.Label(main_frame, text="Колекции", font=("Arial", 22), anchor=NW, side=LEFT).pack()
+    become_a_cheif = ttk.Label(main_frame, text="Стать поваром", font=("Arial", 22), anchor=NW, side=LEFT).pack()
+    become_a_courier = ttk.Label(main_frame, text="Стать курьером", font=("Arial", 22), anchor=NW, side=LEFT).pack()
+    support = ttk.Label(main_frame, text="Поддержка", font=("Arial", 22), anchor=NW, side=LEFT).pack()
+    about_service = ttk.Label(main_frame, text="О сервисе", font=("Arial", 22), anchor=NW, side=LEFT).pack()
+    log_out = ttk.Label(main_frame, text="Выйти из аккаунта", font=("Arial", 22), anchor=NW, side=LEFT).pack()
+    confidential_politics = ttk.Label(main_frame, text="Политика конфиденциальности", font=("Arial", 18), anchor=NW, side=LEFT).pack()
+    ensurance = ttk.Label(main_frame, text="Страхование", font=("Arial", 18), anchor=NW, side=LEFT).pack()
+
     main_canvas.pack(fill=Y)
+    main_frame.pack(fill=Y)
+    return user_window
 
 def BrightlessUp(event):
     more_bright = int(str(user_collor)) + int("222222")
