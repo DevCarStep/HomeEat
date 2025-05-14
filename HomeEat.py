@@ -18,11 +18,35 @@ canvas.pack(anchor="nw", side=LEFT)
 
 username = "Абчихба"
 def UserCircleClick(event):
-    user_window = Tk()
+    user_window = Toplevel(root)
     user_window.title(username)
     user_window.geometry("1800x1000")
-    user_window.resizable(False, True)
+    user_window.resizable(False, False)
     user_window.grab_set()
+
+    upper_frame = ttk.Frame(master=user_window)
+    canvas = Canvas(master=upper_frame, background="white", width=72, height=72, highlightthickness=0)
+    canvas.pack(anchor="nw", side=LEFT)
+
+    logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
+    canvas.create_image(36, 36, image=logo)
+
+    user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
+    user_canvas.pack(anchor=NE, side=RIGHT)
+    idOval = user_canvas.create_oval(2, 2, 58, 58, fill="#777777", outline="#777777", tags=["clickable", "weakbutton"])
+    user_first_letter = username.upper
+    user_canvas.create_text(30.5, 30, text=username[0], fill="white", font=("Arial", 20))
+
+    label = ttk.Label(upper_frame, text="Профиль", background="white", font= ("Arial", 20)).pack()
+
+    upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
+
+    main_canvas = Canvas()
+    main_frame = ttk.Frame(master=main_canvas)
+    
+    main_frame.pack(fill=Y)
+    main_canvas.pack(fill=Y)
+
 def BrightlessUp(event):
     more_bright = int(str(user_collor)) + int("222222")
     canvas.itemconfigure("weakbutton", fill="#" + str(more_bright))
@@ -45,7 +69,7 @@ label = ttk.Label(upper_frame, text=adress, background="white", font= ("Arial", 
 # user_btn.pack(anchor="ne", side=RIGHT)
 
 logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
-logo_label = ttk.Label(upper_frame, image=logo)
+# logo_label = ttk.Label(upper_frame, image=logo)
 canvas.create_image(36, 36, image=logo)
 #logo_label.pack(anchor="nw", side=LEFT)
 
