@@ -20,10 +20,7 @@ username = "Абчихба"
 phone = "+7 800 555 35 35"
 email = "abjihba@hotmail.ua"
 def UserCircleClick(event):
-    user_window = UserWindowCreate()
-    return user_window
-def UserWindowCreate():
-    user_window = Toplevel(root)
+    user_window = Toplevel(master=root)
     user_window.title(username)
     user_window.geometry("1800x1000")
     user_window.resizable(False, False)
@@ -31,47 +28,61 @@ def UserWindowCreate():
 
     upper_frame = ttk.Frame(master=user_window)
     canvas = Canvas(master=upper_frame, background="white", width=72, height=72, highlightthickness=0)
-    canvas.pack(anchor="nw", side=LEFT)
+    canvas.pack(side=LEFT)
 
     logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
     canvas.create_image(36, 36, image=logo)
 
-    user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
+    user_canvas = Canvas(master=upper_frame, background="white", highlightthickness=0, height=60, width=60)
     user_canvas.pack(anchor=NE, side=RIGHT)
     idOval = user_canvas.create_oval(2, 2, 58, 58, fill="#777777", outline="#777777", tags=["clickable", "weakbutton"])
-    user_first_letter = username.upper
     user_canvas.create_text(30.5, 30, text=username[0], fill="white", font=("Arial", 20))
 
     label = ttk.Label(upper_frame, text="Профиль", background="white", font= ("Arial", 20)).pack()
 
     upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 
-    main_canvas = Canvas(user_window)
+    main_canvas = Canvas(master=user_window)
     main_frame = ttk.Frame(master=main_canvas)
-    
-    username_lamel = ttk.Label(main_frame, text=username, font=("Arial", 20), anchor=NE, side=RIGHT).pack()
-    phone_label = ttk.Label(main_frame, text=phone, font=("Arial", 20), anchor=NE, side=RIGHT).pack()
-    email_label = ttk.Label(main_frame, text=email, font=("Arial", 20), anchor=NE, side=RIGHT).pack()
-    
-    order_history = ttk.Label(main_frame, text="История заказов", font=("Arial", 22), anchor=NW, side=LEFT).pack()
-    promocodes = ttk.Label(main_frame, text="Промокоды", font=("Arial", 22), anchor=NW, side=LEFT).pack()
-    collections = ttk.Label(main_frame, text="Колекции", font=("Arial", 22), anchor=NW, side=LEFT).pack()
-    become_a_cheif = ttk.Label(main_frame, text="Стать поваром", font=("Arial", 22), anchor=NW, side=LEFT).pack()
-    become_a_courier = ttk.Label(main_frame, text="Стать курьером", font=("Arial", 22), anchor=NW, side=LEFT).pack()
-    support = ttk.Label(main_frame, text="Поддержка", font=("Arial", 22), anchor=NW, side=LEFT).pack()
-    about_service = ttk.Label(main_frame, text="О сервисе", font=("Arial", 22), anchor=NW, side=LEFT).pack()
-    log_out = ttk.Label(main_frame, text="Выйти из аккаунта", font=("Arial", 22), anchor=NW, side=LEFT).pack()
-    confidential_politics = ttk.Label(main_frame, text="Политика конфиденциальности", font=("Arial", 18), anchor=NW, side=LEFT).pack()
-    ensurance = ttk.Label(main_frame, text="Страхование", font=("Arial", 18), anchor=NW, side=LEFT).pack()
 
-    main_canvas.pack(fill=Y)
-    main_frame.pack(fill=Y)
-    return user_window
+    main_canvas.pack(fill=BOTH, padx=158)
+    main_frame.pack(fill=BOTH, padx=158)
+    
+    username_label = ttk.Label(master=main_frame, text=username, font=("Arial", 20), background="white")
+    username_label.pack(anchor=NE)
+    phone_label = ttk.Label(master=main_frame, text=phone, font=("Arial", 20), background="white")
+    phone_label.pack(anchor=NE)
+    email_label = ttk.Label(master=main_frame, text=email, font=("Arial", 20), background="white")
+    email_label.pack(anchor=NE)
+    
+    menuscreenpadd = 100
+    menuelementspady = 20
+    order_history = ttk.Label(master=main_frame, text="История заказов", font=("Arial", 22), background="white")
+    order_history.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+    promocodes = ttk.Label(master=main_frame, text="Промокоды", font=("Arial", 22), background="white")
+    promocodes.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+    collections = ttk.Label(master=main_frame, text="Колекции", font=("Arial", 22), background="white")
+    collections.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+    become_a_cheif = ttk.Label(master=main_frame, text="Стать поваром", font=("Arial", 22), background="white")
+    become_a_cheif.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+    become_a_courier = ttk.Label(master=main_frame, text="Стать курьером", font=("Arial", 22), background="white")
+    become_a_courier.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+    support = ttk.Label(master=main_frame, text="Поддержка", font=("Arial", 22), background="white")
+    support.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+    about_service = ttk.Label(master=main_frame, text="О сервисе", font=("Arial", 22), background="white")
+    about_service.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+    log_out = ttk.Label(master=main_frame, text="Выйти из аккаунта", font=("Arial", 22), background="white")
+    log_out.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+    confidential_politics = ttk.Label(master=main_frame, text="Политика конфиденциальности", font=("Arial", 18), background="white")
+    confidential_politics.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
+    ensurance = ttk.Label(master=main_frame, text="Страхование", font=("Arial", 18), background="white")
+    ensurance.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
+
 
 def BrightlessUp(event):
-    more_bright = int(str(user_collor)) + int("222222")
-    canvas.itemconfigure("weakbutton", fill="#" + str(more_bright))
-def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill="#" + str(user_collor))
+    more_bright = "#" + str(int(user_collor) + int(222222))
+    canvas.itemconfigure("weakbutton", fill=more_bright)
+def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill="#" + str(user_collor));
 user_collor = int("777777")
 user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
 user_canvas.pack(anchor=NE, side=RIGHT)
