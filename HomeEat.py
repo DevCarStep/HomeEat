@@ -17,6 +17,13 @@ upper_frame_style.configure("TFrame", background="white")
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
 
+def TextClick(event):
+    return 0
+def OnTextEntered(event):
+    if event.type == '7':
+        event.widget['background'] = ""
+    elif event.type == '8':
+        event.widget['background'] = "white"
 username = "Абчихба"
 phone = "+7 800 555 35 35"
 email = "abjihba@hotmail.ua"
@@ -57,26 +64,46 @@ def UserCircleClick(event):
     
     menuscreenpadd = 100
     menuelementspady = 20
-    order_history = ttk.Label(master=main_frame, text="История заказов", font=("Arial", 22), background="white")
+    order_history = ttk.Label(master=main_frame, text="История заказов", font=("Arial", 22), background="white", cursor="hand2")
     order_history.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    promocodes = ttk.Label(master=main_frame, text="Промокоды", font=("Arial", 22), background="white")
+    order_history.bind('<Enter>', OnTextEntered)
+    order_history.bind('<Leave>', OnTextEntered)
+    promocodes = ttk.Label(master=main_frame, text="Промокоды", font=("Arial", 22), background="white", cursor="hand2")
     promocodes.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    collections = ttk.Label(master=main_frame, text="Колекции", font=("Arial", 22), background="white")
+    promocodes.bind('<Enter>', OnTextEntered)
+    promocodes.bind('<Leave>', OnTextEntered)
+    collections = ttk.Label(master=main_frame, text="Колекции", font=("Arial", 22), background="white", cursor="hand2")
     collections.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    become_a_cheif = ttk.Label(master=main_frame, text="Стать поваром", font=("Arial", 22), background="white")
+    collections.bind('<Enter>', OnTextEntered)
+    collections.bind('<Leave>', OnTextEntered)
+    become_a_cheif = ttk.Label(master=main_frame, text="Стать поваром", font=("Arial", 22), background="white", cursor="hand2")
     become_a_cheif.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    become_a_courier = ttk.Label(master=main_frame, text="Стать курьером", font=("Arial", 22), background="white")
+    become_a_cheif.bind('<Enter>', OnTextEntered)
+    become_a_cheif.bind('<Leave>', OnTextEntered)
+    become_a_courier = ttk.Label(master=main_frame, text="Стать курьером", font=("Arial", 22), background="white", cursor="hand2")
     become_a_courier.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    support = ttk.Label(master=main_frame, text="Поддержка", font=("Arial", 22), background="white")
+    become_a_courier.bind('<Enter>', OnTextEntered)
+    become_a_courier.bind('<Leave>', OnTextEntered)
+    support = ttk.Label(master=main_frame, text="Поддержка", font=("Arial", 22), background="white", cursor="hand2")
     support.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    about_service = ttk.Label(master=main_frame, text="О сервисе", font=("Arial", 22), background="white")
+    support.bind('<Enter>', OnTextEntered)
+    support.bind('<Leave>', OnTextEntered)
+    about_service = ttk.Label(master=main_frame, text="О сервисе", font=("Arial", 22), background="white", cursor="hand2")
     about_service.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    log_out = ttk.Label(master=main_frame, text="Выйти из аккаунта", font=("Arial", 22), background="white")
+    about_service.bind('<Enter>', OnTextEntered)
+    about_service.bind('<Leave>', OnTextEntered)
+    log_out = ttk.Label(master=main_frame, text="Выйти из аккаунта", font=("Arial", 22), background="white", cursor="hand2")
     log_out.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    confidential_politics = ttk.Label(master=main_frame, text="Политика конфиденциальности", font=("Arial", 18), background="white")
+    log_out.bind('<Enter>', OnTextEntered)
+    log_out.bind('<Leave>', OnTextEntered)
+    confidential_politics = ttk.Label(master=main_frame, text="Политика конфиденциальности", font=("Arial", 18), background="white", cursor="hand2")
     confidential_politics.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
-    ensurance = ttk.Label(master=main_frame, text="Страхование", font=("Arial", 18), background="white")
+    confidential_politics.bind('<Enter>', OnTextEntered)
+    confidential_politics.bind('<Leave>', OnTextEntered)
+    ensurance = ttk.Label(master=main_frame, text="Страхование", font=("Arial", 18), background="white", cursor="hand2")
     ensurance.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
+    ensurance.bind('<Enter>', OnTextEntered)
+    ensurance.bind('<Leave>', OnTextEntered)
 
 
 def BrightlessUp(event):
