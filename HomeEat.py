@@ -8,6 +8,7 @@ root.title("HomeEat")     # устанавливаем заголовок окн
 root.iconbitmap(default=r"C:\Users\224\Desktop\HomeEat\HomeEat.ico")
 root.geometry("1800x1000")    # устанавливаем размеры окна
 root.resizable(False, True)
+logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
 
 upper_frame = ttk.Frame()
 upper_frame_style = ttk.Style()
@@ -28,9 +29,8 @@ def UserCircleClick(event):
 
     upper_frame = ttk.Frame(master=user_window)
     canvas = Canvas(master=upper_frame, background="white", width=72, height=72, highlightthickness=0)
-    canvas.pack(side=LEFT)
+    canvas_logo = canvas.pack(anchor="nw", side=LEFT)
 
-    logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
     canvas.create_image(36, 36, image=logo)
 
     user_canvas = Canvas(master=upper_frame, background="white", highlightthickness=0, height=60, width=60)
@@ -100,7 +100,6 @@ label = ttk.Label(upper_frame, text=adress, background="white", font= ("Arial", 
 # user_btn.place(height=60, width=60, anchor=NE)
 # user_btn.pack(anchor="ne", side=RIGHT)
 
-logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
 # logo_label = ttk.Label(upper_frame, image=logo)
 canvas.create_image(36, 36, image=logo)
 #logo_label.pack(anchor="nw", side=LEFT)
