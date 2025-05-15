@@ -10,16 +10,20 @@ root.geometry("1800x1000")    # устанавливаем размеры окн
 root.resizable(False, True)
 logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
 
-upper_frame = ttk.Frame()
+upper_frame = ttk.Frame() # верхний фрейм первого окна
 upper_frame_style = ttk.Style()
 upper_frame_style.configure("TFrame", background="white")
 
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
 
-def TextClick(event):
-    return 0
-def OnTextEntered(event):
+def TextClick(event): # обработка кликера второго окна
+    if event.type == '4':
+        if event.widget["text"] == "История заказов":
+            showinfo(title=event.widget["text"], message="ыуа")
+        elif event.widget["text"] == "Промокоды":
+            showinfo(title=event.widget["text"], message="икетти")
+def OnTextEntered(event): # обработка попадания курсора второго окна
     if event.type == '7':
         event.widget['background'] = ""
     elif event.type == '8':
@@ -27,14 +31,14 @@ def OnTextEntered(event):
 username = "Абчихба"
 phone = "+7 800 555 35 35"
 email = "abjihba@hotmail.ua"
-def UserCircleClick(event):
+def UserCircleClick(event): # создание второго окна
     user_window = Toplevel(master=root)
     user_window.title(username)
     user_window.geometry("1800x1000")
     user_window.resizable(False, False)
     user_window.grab_set()
 
-    upper_frame = ttk.Frame(master=user_window)
+    upper_frame = ttk.Frame(master=user_window) # верхний фрейм второго окна
     canvas = Canvas(master=upper_frame, background="white", width=72, height=72, highlightthickness=0)
     canvas_logo = canvas.pack(anchor="nw", side=LEFT)
 
@@ -50,7 +54,7 @@ def UserCircleClick(event):
     upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 
     main_canvas = Canvas(master=user_window)
-    main_frame = ttk.Frame(master=main_canvas)
+    main_frame = ttk.Frame(master=main_canvas) # главный фрейм второго окна
 
     main_canvas.pack(fill=BOTH, padx=158)
     main_frame.pack(fill=BOTH, padx=158)
@@ -68,42 +72,52 @@ def UserCircleClick(event):
     order_history.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
     order_history.bind('<Enter>', OnTextEntered)
     order_history.bind('<Leave>', OnTextEntered)
+    order_history.bind('<ButtonPress-1>', TextClick)
     promocodes = ttk.Label(master=main_frame, text="Промокоды", font=("Arial", 22), background="white", cursor="hand2")
     promocodes.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
     promocodes.bind('<Enter>', OnTextEntered)
     promocodes.bind('<Leave>', OnTextEntered)
+    promocodes.bind('<ButtonPress-1>', TextClick)
     collections = ttk.Label(master=main_frame, text="Колекции", font=("Arial", 22), background="white", cursor="hand2")
     collections.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
     collections.bind('<Enter>', OnTextEntered)
     collections.bind('<Leave>', OnTextEntered)
+    collections.bind('<ButtonPress-1>', TextClick)
     become_a_cheif = ttk.Label(master=main_frame, text="Стать поваром", font=("Arial", 22), background="white", cursor="hand2")
     become_a_cheif.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
     become_a_cheif.bind('<Enter>', OnTextEntered)
     become_a_cheif.bind('<Leave>', OnTextEntered)
+    become_a_cheif.bind('<ButtonPress-1>', TextClick)
     become_a_courier = ttk.Label(master=main_frame, text="Стать курьером", font=("Arial", 22), background="white", cursor="hand2")
     become_a_courier.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
     become_a_courier.bind('<Enter>', OnTextEntered)
     become_a_courier.bind('<Leave>', OnTextEntered)
+    become_a_courier.bind('<ButtonPress-1>', TextClick)
     support = ttk.Label(master=main_frame, text="Поддержка", font=("Arial", 22), background="white", cursor="hand2")
     support.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
     support.bind('<Enter>', OnTextEntered)
     support.bind('<Leave>', OnTextEntered)
+    support.bind('<ButtonPress-1>', TextClick)
     about_service = ttk.Label(master=main_frame, text="О сервисе", font=("Arial", 22), background="white", cursor="hand2")
     about_service.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
     about_service.bind('<Enter>', OnTextEntered)
     about_service.bind('<Leave>', OnTextEntered)
+    about_service.bind('<ButtonPress-1>', TextClick)
     log_out = ttk.Label(master=main_frame, text="Выйти из аккаунта", font=("Arial", 22), background="white", cursor="hand2")
     log_out.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
     log_out.bind('<Enter>', OnTextEntered)
     log_out.bind('<Leave>', OnTextEntered)
+    log_out.bind('<ButtonPress-1>', TextClick)
     confidential_politics = ttk.Label(master=main_frame, text="Политика конфиденциальности", font=("Arial", 18), background="white", cursor="hand2")
     confidential_politics.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
     confidential_politics.bind('<Enter>', OnTextEntered)
     confidential_politics.bind('<Leave>', OnTextEntered)
+    confidential_politics.bind('<ButtonPress-1>', TextClick)
     ensurance = ttk.Label(master=main_frame, text="Страхование", font=("Arial", 18), background="white", cursor="hand2")
     ensurance.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
     ensurance.bind('<Enter>', OnTextEntered)
     ensurance.bind('<Leave>', OnTextEntered)
+    ensurance.bind('<ButtonPress-1>', TextClick)
 
 
 def BrightlessUp(event):
@@ -135,9 +149,9 @@ upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 
 separation_line = Canvas(width=1170, height=1, background="black").pack()
 
-main_canvas = Canvas(scrollregion=(0, 0, 5000, 5000))
+main_canvas = Canvas(scrollregion=(0, 0, 5000, 5000)) # главный фрейм первого окна
 main_frame = ttk.Frame(master=main_canvas)
-def CreateDishWidget():
+def CreateDishWidget(): # функция создания карточек блююда
     element = ttk.Frame(master=main_frame, height=250, width=210, borderwidth=1, relief=SOLID)
     element.pack_propagate(False) 
     photo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
