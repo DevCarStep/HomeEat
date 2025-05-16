@@ -17,12 +17,35 @@ upper_frame_style.configure("TFrame", background="white")
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
 
+def CreateFromMenuWindow(name):
+    window = Toplevel(master=root)
+    window.title(name)
+    window.geometry("1800x1000")
+    window.resizable(False, False)
+    window.grab_set()
+    return window
 def TextClick(event): # обработка кликера второго окна
     if event.type == '4':
         if event.widget["text"] == "История заказов":
-            showinfo(title=event.widget["text"], message="ыуа")
+            CreateFromMenuWindow(event.widget["text"])
         elif event.widget["text"] == "Промокоды":
-            showinfo(title=event.widget["text"], message="икетти")
+            CreateFromMenuWindow(event.widget["text"])
+        elif event.widget["text"] == "Колекции":
+            CreateFromMenuWindow(event.widget["text"])
+        elif event.widget["text"] == "Стать поваром":
+            CreateFromMenuWindow(event.widget["text"])
+        elif event.widget["text"] == "Стать курьером":
+            CreateFromMenuWindow(event.widget["text"])
+        elif event.widget["text"] == "Поддержка":
+            CreateFromMenuWindow(event.widget["text"])
+        elif event.widget["text"] == "О сервисе":
+            CreateFromMenuWindow(event.widget["text"])
+        elif event.widget["text"] == "Выйти из аккаунта":
+            return 0
+        elif event.widget["text"] == "Политика конфиденциальности":
+            CreateFromMenuWindow(event.widget["text"])
+        elif event.widget["text"] == "Страхование":
+            CreateFromMenuWindow(event.widget["text"])
 def OnTextEntered(event): # обработка попадания курсора второго окна
     if event.type == '7':
         event.widget['background'] = ""
