@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showinfo
+from random import randint
 
  
 root = Tk()     # создаем корневой объект - окно
@@ -27,25 +28,25 @@ def CreateFromMenuWindow(name):
 def TextClick(event): # обработка кликера второго окна
     if event.type == '4':
         if event.widget["text"] == "История заказов":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "История заказов"
         elif event.widget["text"] == "Промокоды":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "Промокоды"
         elif event.widget["text"] == "Колекции":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "Колекции"
         elif event.widget["text"] == "Стать поваром":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "ИСтать поваром"
         elif event.widget["text"] == "Стать курьером":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "Стать курьером"
         elif event.widget["text"] == "Поддержка":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "Поддержка"
         elif event.widget["text"] == "О сервисе":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "О сервисе"
         elif event.widget["text"] == "Выйти из аккаунта":
-            return 0
+            return 0 # выход из аккаунта
         elif event.widget["text"] == "Политика конфиденциальности":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "Политика конфиденциальности"
         elif event.widget["text"] == "Страхование":
-            CreateFromMenuWindow(event.widget["text"])
+            CreateFromMenuWindow(event.widget["text"]) # создание окна "Страхование"
 def OnTextEntered(event): # обработка попадания курсора второго окна
     if event.type == '7':
         event.widget['background'] = ""
@@ -69,7 +70,7 @@ def UserCircleClick(event): # создание второго окна
 
     user_canvas = Canvas(master=upper_frame, background="white", highlightthickness=0, height=60, width=60)
     user_canvas.pack(anchor=NE, side=RIGHT)
-    idOval = user_canvas.create_oval(2, 2, 58, 58, fill="#777777", outline="#777777", tags=["clickable", "weakbutton"])
+    idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
     user_canvas.create_text(30.5, 30, text=username[0], fill="white", font=("Arial", 20))
 
     label = ttk.Label(upper_frame, text="Профиль", background="white", font= ("Arial", 20)).pack()
@@ -144,13 +145,17 @@ def UserCircleClick(event): # создание второго окна
 
 
 def BrightlessUp(event):
-    more_bright = "#" + str(int(user_collor) + int(222222))
+    more_bright = user_color
     canvas.itemconfigure("weakbutton", fill=more_bright)
-def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill="#" + str(user_collor));
-user_collor = int("777777")
+def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill=user_color);
+def RandomCollor(): # генератор случайного цвета
+    colorgen = lambda: randint(0,255)
+    color = '#%02X%02X%02X' % (colorgen(), colorgen(), colorgen())
+    return str(color)
+user_color = RandomCollor()
 user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
 user_canvas.pack(anchor=NE, side=RIGHT)
-idOval = user_canvas.create_oval(2, 2, 58, 58, fill="#777777", outline="#777777", tags=["clickable", "weakbutton"])
+idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
 user_first_letter = username.upper
 user_canvas.create_text(30.5, 30, text=username[0], fill="white", font=("Arial", 20))
 user_canvas.bind("<ButtonPress-1>", UserCircleClick)
@@ -158,7 +163,7 @@ user_canvas.bind("<Enter>", BrightlessUp)
 user_canvas.bind("<Leave>", BrightlessDown)
 
 adress = "Луначарского, 66"
-label = ttk.Label(upper_frame, text=adress, background="white", font= ("Arial", 24)).pack()
+adress_label = ttk.Label(upper_frame, text=adress, background="white", font= ("Arial", 24)).pack()
 
 # user_btn = ttk.Button(upper_frame, text="A")
 # user_btn.place(height=60, width=60, anchor=NE)
