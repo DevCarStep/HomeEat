@@ -2,7 +2,8 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 from random import randint
-import tkinter as tk
+from tkinter.scrolledtext import ScrolledText
+import codecs
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
@@ -29,25 +30,39 @@ def CreateFromMenuWindow(name):
 def TextClick(event): # обработка кликера второго окна
     if event.type == '4':
         if event.widget["text"] == "История заказов":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "История заказов"
+            order_history_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "История заказов"
         elif event.widget["text"] == "Промокоды":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "Промокоды"
+            promocodes_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Промокоды"
         elif event.widget["text"] == "Колекции":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "Колекции"
+            collections_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Колекции"
         elif event.widget["text"] == "Стать поваром":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "ИСтать поваром"
+            become_a_cheif_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "ИСтать поваром"
         elif event.widget["text"] == "Стать курьером":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "Стать курьером"
+            become_a_courier_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Стать курьером"
         elif event.widget["text"] == "Поддержка":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "Поддержка"
+            support_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Поддержка"
         elif event.widget["text"] == "О сервисе":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "О сервисе"
+            about_service_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "О сервисе"
         elif event.widget["text"] == "Выйти из аккаунта":
             return 0 # выход из аккаунта
         elif event.widget["text"] == "Политика конфиденциальности":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "Политика конфиденциальности"
+            confidentiality_politics_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Политика конфиденциальности"
+            confidentiality_politics_window.grid_columnconfigure(0, weight = 1)
+            confidentiality_politics_window.grid_rowconfigure(0, weight = 1)
+
+            confidential_politics_file = codecs.open(r"C:\Users\224\Desktop\HomeEat\confedintial_politics.txt", "r", "utf_8_sig")
+            content = confidential_politics_file.read()
+
+            sc = Text(master=confidentiality_politics_window, wrap=WORD)
+            sc.grid(column = 0, row = 0, sticky = NSEW)
+            doc_scrollbar = ttk.Scrollbar(master=confidentiality_politics_window, orient = "vertical", command = sc.yview)
+            doc_scrollbar.grid(column = 1, row = 0, sticky = NS)
+            sc.insert(END, content)
+            sc["state"] = DISABLED
+            sc["yscrollcommand"] = doc_scrollbar.set
+            confidential_politics_file.close()
         elif event.widget["text"] == "Страхование":
-            CreateFromMenuWindow(event.widget["text"]) # создание окна "Страхование"
+            ensurance_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Страхование"
 def OnTextEntered(event): # обработка попадания курсора второго окна
     if event.type == '7':
         event.widget['background'] = ""
@@ -189,7 +204,7 @@ upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 separation_line = Canvas(width=1170, height=1, background="black").pack()
 
 
-main_canvas = tk.Canvas(root, scrollregion=(0, 0, 5000, 5000)) # главный фрейм первого окна
+main_canvas = Canvas(root, scrollregion=(0, 0, 5000, 5000)) # главный фрейм первого окна
 scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=canvas.yview)
 main_frame = ttk.Frame(main_canvas)
 
@@ -216,7 +231,6 @@ scrollbar.pack(side=RIGHT, fill=Y)
 main_frame.pack(fill=Y)
 main_canvas.pack(fill=Y)
 main_canvas["yscrollcommand"] = scrollbar.set
-
 
 
 root.mainloop()
