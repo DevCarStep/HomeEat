@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 from random import randint
-
+import tkinter as tk
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
@@ -10,6 +10,9 @@ root.iconbitmap(default=r"C:\Users\224\Desktop\HomeEat\HomeEat.ico")
 root.geometry("1800x1000")    # устанавливаем размеры окна
 root.resizable(False, True)
 logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
+root.grid_rowconfigure(0, weight=1)
+root.columnconfigure(0, weight=1)
+
 
 upper_frame = ttk.Frame() # верхний фрейм первого окна
 upper_frame_style = ttk.Style()
@@ -17,6 +20,28 @@ upper_frame_style.configure("TFrame", background="white")
 
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
+
+class ScrollableFrame(ttk.Frame):
+    def __init__(self, container, *args, **kwargs):
+        super().__init__(container, *args, **kwargs)
+
+         # Create a canvas with a vertical scrollbar
+        canvas = tk.Canvas(self)
+        scrollbar = ttk.Scrollbar(self, orient="vertical", command=canvas.yview)
+        scrollable_frame = ttk.Frame(canvas)
+
+        # Configure the canvas
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        # Pack the components
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Bind canvas resize to configure the scrollable region
+        canvas.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+        self.scrollable_frame = scrollable_frame
 
 def CreateFromMenuWindow(name):
     window = Toplevel(master=root)
@@ -143,16 +168,6 @@ def UserCircleClick(event): # создание второго окна
     ensurance.bind('<Leave>', OnTextEntered)
     ensurance.bind('<ButtonPress-1>', TextClick)
 
-def DishWindowCreate(name): # создание окна конкретного блюда
-    window = Toplevel(master=root)
-    window.title(name)
-    window.geometry("1800x1000")
-    window.resizable(False, False)
-    window.grab_set()
-    return window
-
-def DishCardClick(event): # событие клика на карточку блюда
-    DishWindowCreate("nullreference")
 
 def BrightlessUp(event):
     more_bright = user_color
@@ -187,30 +202,34 @@ upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 
 separation_line = Canvas(width=1170, height=1, background="black").pack()
 
-main_canvas = Canvas(scrollregion=(0, 0, 5000, 5000)) # главный фрейм первого окна
-main_frame = ttk.Frame(master=main_canvas)
+
+main_canvas = tk.Canvas(root) # главный фрейм первого окна
+scroll_bar = ttk.Scrollbar(root, orient="vertical", command=canvas.yview)
+main_frame = ttk.Frame(root)
+
+#main_frame = ttk.Frame(master=main_canvas)
 def CreateDishWidget(): # функция создания карточек блююда
-    element = ttk.Frame(master=main_frame, height=250, width=210, borderwidth=1, relief=SOLID)
+    element = ttk.Frame(master=main_canvas, height=250, width=210, borderwidth=1, relief=SOLID)
     element.pack_propagate(False) 
     photo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
     photo_canvas = Canvas(element, width=190, height=190)
     photo_canvas.pack(pady=8)
     photo_canvas.create_image(95, 95, image=photo)
-    photo_canvas.bind('<ButtonPress-1>', DishCardClick)
-    name_label = ttk.Label(master=element, text="nullreference", font=("Arial", 16))
-    name_label.pack()
-    name_label.bind('<ButtonPress-1>', DishCardClick)
-    element.bind('<ButtonPress-1>', DishCardClick)
+    name_label = ttk.Label(master=element, text="nullreference", font=("Arial", 16)).pack()
     return element
 for i in range(4):
     for j in range(5):
         element = CreateDishWidget()
         element.grid(row=i, column=j, padx=5, pady=5, ipadx=6, ipady=6, sticky= EW)
-scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=main_canvas.yview)
-scrollbar.pack(side=RIGHT, fill=Y)
-main_frame.pack(fill=Y)
+
+#scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=main_canvas.yview)
+scroll_bar.pack(side=RIGHT, fill=Y)
+#main_frame.pack(fill=Y)
 main_canvas.pack(fill=Y)
-main_canvas["yscrollcommand"] = scrollbar.set
+
+main_frame.grid()
+main_canvas["yscrollcommand"] = scroll_bar.set
+
 
 
 root.mainloop()
