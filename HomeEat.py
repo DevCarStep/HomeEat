@@ -143,6 +143,16 @@ def UserCircleClick(event): # создание второго окна
     ensurance.bind('<Leave>', OnTextEntered)
     ensurance.bind('<ButtonPress-1>', TextClick)
 
+def DishWindowCreate(name): # создание окна конкретного блюда
+    window = Toplevel(master=root)
+    window.title(name)
+    window.geometry("1800x1000")
+    window.resizable(False, False)
+    window.grab_set()
+    return window
+
+def DishCardClick(event): # событие клика на карточку блюда
+    DishWindowCreate("nullreference")
 
 def BrightlessUp(event):
     more_bright = user_color
@@ -186,7 +196,11 @@ def CreateDishWidget(): # функция создания карточек бл�
     photo_canvas = Canvas(element, width=190, height=190)
     photo_canvas.pack(pady=8)
     photo_canvas.create_image(95, 95, image=photo)
-    name_label = ttk.Label(master=element, text="nullreference", font=("Arial", 16)).pack()
+    photo_canvas.bind('<ButtonPress-1>', DishCardClick)
+    name_label = ttk.Label(master=element, text="nullreference", font=("Arial", 16))
+    name_label.pack()
+    name_label.bind('<ButtonPress-1>', DishCardClick)
+    element.bind('<ButtonPress-1>', DishCardClick)
     return element
 for i in range(4):
     for j in range(5):
