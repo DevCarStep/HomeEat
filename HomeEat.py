@@ -2,8 +2,44 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 from random import randint
-from tkinter.scrolledtext import ScrolledText
 import codecs
+import sqlite3
+
+con = sqlite3.connect('userdata.db')
+cur = con.cursor()
+cur.execute('''CREATE TABLE IF NOT EXISTS record(
+                    id integer primary key,
+                    name text, 
+                    email text, 
+                    phone number,
+                    password text
+                )
+            ''')
+con.commit()
+con = sqlite3.connect('userdata.db')
+cur = con.cursor()
+# cur.execute("INSERT INTO record(name, email, phone, password) VALUES (:name, :email, :phone, :password)", {
+#                             'name': "Абчихба",
+#                             'email': "abjihba@hotmail.ua",
+#                             'phone': 88005553535,
+#                             'password': "12345678"
+
+#             })
+# con.commit()
+
+class Account:
+    def __init__(self, name, email, password, phone):
+        self.name = name
+        self.email = email
+        self.password = password
+        self.phone = phone
+
+
+accounts = list() # нулевой элемент - всегда пустой аккаунт
+accounts.append(Account("Войти", "", "", ""))
+accounts.append(Account("Абчихба", "abjihba@hotmail.ua", "12345678", "+7 800 555 35 35"))
+    
+user = accounts[0]
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
@@ -19,20 +55,6 @@ upper_frame_style.configure("TFrame", background="white")
 
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
-
-class Account:
-    def __init__(self, name, email, password, phone):
-        self.name = name
-        self.email = email
-        self.password = password
-        self.phone = phone
-
-
-accounts = list() # нулевой элемент - всегда пустой аккаунт
-accounts.append(Account("Войти", "", "", ""))
-accounts.append(Account("Абчихба", "abjihba@hotmail.ua", "12345678", "+7 800 555 35 35"))
-    
-user = accounts[0]
 
 def CreateFromMenuWindow(name):
     window = Toplevel(master=root)
@@ -59,6 +81,7 @@ def TextClick(event): # обработка кликера второго окн�
             about_service_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "О сервисе"
         elif event.widget["text"] == "Выйти из аккаунта":
             user = accounts[0]
+            root.update()
         elif event.widget["text"] == "Политика конфиденциальности":
             confidentiality_politics_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Политика конфиденциальности"
             confidentiality_politics_window.grid_columnconfigure(0, weight = 1)
@@ -83,10 +106,20 @@ def OnTextEntered(event): # обработка попадания курсора
     elif event.type == '8':
         event.widget['background'] = "white"
 
-def UserChecker(email, password):
-    for account in accounts:
-        if email == accounts[account].email and password == accounts[account].password:
-            user = accounts[account]
+def UserChecker(email, password): # функция проверки почты и пароля
+    try:
+        con = sqlite3.connect('userdata.db')
+        c = con.cursor()
+    except Exception as ep:
+        print('error')
+    for row in c.execute("Select * from record"):
+        demail = row[2]
+        pwd = row[4]
+    for i in range(1, len(accounts)):
+        if email == demail and password == pwd:
+            user = accounts[i]
+            root.update()
+            print("Succesful")
 
 def UserCircleClick(event): # создание второго окна
     if user != accounts[0]:
@@ -176,8 +209,8 @@ def UserCircleClick(event): # создание второго окна
         ensurance.bind('<Enter>', OnTextEntered)
         ensurance.bind('<Leave>', OnTextEntered)
         ensurance.bind('<ButtonPress-1>', TextClick)
-    else:
-        login_window = Toplevel(master=root)
+    else: # иначе окно входа
+        login_window = Toplevel(master=root) # создание окна входа
         login_window.title("Вход в аккаунт")
         login_window.geometry("1800x1000")
         login_window.resizable(False, False)
@@ -193,14 +226,13 @@ def UserCircleClick(event): # создание второго окна
         email_input.pack(anchor=N, pady=10, fill=X, padx=10)
         form_password_label = ttk.Label(form, text="Пароль", background="white")
         form_password_label.pack(anchor=W, padx=12)
-        password_input = ttk.Entry(form)
+        password_input = ttk.Entry(form, show='*')
         password_input.pack(anchor=N, pady=10, fill=X, padx=10)
-        login_btn = ttk.Button(form, text="ВОЙТИ")
+        login_btn = ttk.Button(form, text="ВОЙТИ", command=lambda: UserChecker(email_input.get(), password_input.get()))
         login_btn.pack(anchor=S, fill=X, pady=2, padx=15)
         errmsg = StringVar()
         login_error_label = ttk.Label(form, foreground="red", background="white", textvariable=errmsg)
         login_error_label.pack(anchor=NW, padx=12, pady=5)
-        UserChecker(email_input.get(), password_input.get())
 
 
 def DishWindowCreate(name): # создание окна конкретного блюда
