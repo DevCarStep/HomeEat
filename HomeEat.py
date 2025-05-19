@@ -20,6 +20,20 @@ upper_frame_style.configure("TFrame", background="white")
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
 
+class Account:
+    def __init__(self, name, email, password, phone):
+        self.name = name
+        self.email = email
+        self.password = password
+        self.phone = phone
+
+
+accounts = list() # нулевой элемент - всегда пустой аккаунт
+accounts.append(Account("Войти", "", "", ""))
+accounts.append(Account("Абчихба", "abjihba@hotmail.ua", "12345678", "+7 800 555 35 35"))
+    
+user = accounts[0]
+
 def CreateFromMenuWindow(name):
     window = Toplevel(master=root)
     window.title(name)
@@ -44,7 +58,7 @@ def TextClick(event): # обработка кликера второго окн�
         elif event.widget["text"] == "О сервисе":
             about_service_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "О сервисе"
         elif event.widget["text"] == "Выйти из аккаунта":
-            return 0 # выход из аккаунта
+            user = accounts[0]
         elif event.widget["text"] == "Политика конфиденциальности":
             confidentiality_politics_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Политика конфиденциальности"
             confidentiality_politics_window.grid_columnconfigure(0, weight = 1)
@@ -68,96 +82,126 @@ def OnTextEntered(event): # обработка попадания курсора
         event.widget['background'] = ""
     elif event.type == '8':
         event.widget['background'] = "white"
-username = "Абчихба"
-phone = "+7 800 555 35 35"
-email = "abjihba@hotmail.ua"
+
+def UserChecker(email, password):
+    for account in accounts:
+        if email == accounts[account].email and password == accounts[account].password:
+            user = accounts[account]
+
 def UserCircleClick(event): # создание второго окна
-    user_window = Toplevel(master=root)
-    user_window.title(username)
-    user_window.geometry("1800x1000")
-    user_window.resizable(False, False)
-    user_window.grab_set()
+    if user != accounts[0]:
+        user_window = Toplevel(master=root)
+        user_window.title(user.name)
+        user_window.geometry("1800x1000")
+        user_window.resizable(False, False)
+        user_window.grab_set()
 
-    upper_frame = ttk.Frame(master=user_window) # верхний фрейм второго окна
-    canvas = Canvas(master=upper_frame, background="white", width=72, height=72, highlightthickness=0)
-    canvas_logo = canvas.pack(anchor="nw", side=LEFT)
+        upper_frame = ttk.Frame(master=user_window) # верхний фрейм второго окна
+        canvas = Canvas(master=upper_frame, background="white", width=72, height=72, highlightthickness=0)
+        canvas_logo = canvas.pack(anchor="nw", side=LEFT)
 
-    canvas.create_image(36, 36, image=logo)
+        canvas.create_image(36, 36, image=logo)
 
-    user_canvas = Canvas(master=upper_frame, background="white", highlightthickness=0, height=60, width=60)
-    user_canvas.pack(anchor=NE, side=RIGHT)
-    idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
-    user_canvas.create_text(30.5, 30, text=username[0], fill="white", font=("Arial", 20))
+        user_canvas = Canvas(master=upper_frame, background="white", highlightthickness=0, height=60, width=60)
+        user_canvas.pack(anchor=NE, side=RIGHT)
+        idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
+        user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
 
-    label = ttk.Label(upper_frame, text="Профиль", background="white", font= ("Arial", 20)).pack()
+        label = ttk.Label(upper_frame, text="Профиль", background="white", font= ("Arial", 20)).pack()
 
-    upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
+        upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 
-    main_canvas = Canvas(master=user_window)
-    main_frame = ttk.Frame(master=main_canvas) # главный фрейм второго окна
+        main_canvas = Canvas(master=user_window)
+        main_frame = ttk.Frame(master=main_canvas) # главный фрейм второго окна
 
-    main_canvas.pack(fill=BOTH, padx=158)
-    main_frame.pack(fill=BOTH, padx=158)
-    
-    username_label = ttk.Label(master=main_frame, text=username, font=("Arial", 20), background="white")
-    username_label.pack(anchor=NE)
-    phone_label = ttk.Label(master=main_frame, text=phone, font=("Arial", 20), background="white")
-    phone_label.pack(anchor=NE)
-    email_label = ttk.Label(master=main_frame, text=email, font=("Arial", 20), background="white")
-    email_label.pack(anchor=NE)
-    
-    menuscreenpadd = 100
-    menuelementspady = 20
-    order_history = ttk.Label(master=main_frame, text="История заказов", font=("Arial", 22), background="white", cursor="hand2")
-    order_history.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    order_history.bind('<Enter>', OnTextEntered)
-    order_history.bind('<Leave>', OnTextEntered)
-    order_history.bind('<ButtonPress-1>', TextClick)
-    promocodes = ttk.Label(master=main_frame, text="Промокоды", font=("Arial", 22), background="white", cursor="hand2")
-    promocodes.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    promocodes.bind('<Enter>', OnTextEntered)
-    promocodes.bind('<Leave>', OnTextEntered)
-    promocodes.bind('<ButtonPress-1>', TextClick)
-    collections = ttk.Label(master=main_frame, text="Колекции", font=("Arial", 22), background="white", cursor="hand2")
-    collections.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    collections.bind('<Enter>', OnTextEntered)
-    collections.bind('<Leave>', OnTextEntered)
-    collections.bind('<ButtonPress-1>', TextClick)
-    become_a_cheif = ttk.Label(master=main_frame, text="Стать поваром", font=("Arial", 22), background="white", cursor="hand2")
-    become_a_cheif.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    become_a_cheif.bind('<Enter>', OnTextEntered)
-    become_a_cheif.bind('<Leave>', OnTextEntered)
-    become_a_cheif.bind('<ButtonPress-1>', TextClick)
-    become_a_courier = ttk.Label(master=main_frame, text="Стать курьером", font=("Arial", 22), background="white", cursor="hand2")
-    become_a_courier.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    become_a_courier.bind('<Enter>', OnTextEntered)
-    become_a_courier.bind('<Leave>', OnTextEntered)
-    become_a_courier.bind('<ButtonPress-1>', TextClick)
-    support = ttk.Label(master=main_frame, text="Поддержка", font=("Arial", 22), background="white", cursor="hand2")
-    support.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    support.bind('<Enter>', OnTextEntered)
-    support.bind('<Leave>', OnTextEntered)
-    support.bind('<ButtonPress-1>', TextClick)
-    about_service = ttk.Label(master=main_frame, text="О сервисе", font=("Arial", 22), background="white", cursor="hand2")
-    about_service.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    about_service.bind('<Enter>', OnTextEntered)
-    about_service.bind('<Leave>', OnTextEntered)
-    about_service.bind('<ButtonPress-1>', TextClick)
-    log_out = ttk.Label(master=main_frame, text="Выйти из аккаунта", font=("Arial", 22), background="white", cursor="hand2")
-    log_out.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
-    log_out.bind('<Enter>', OnTextEntered)
-    log_out.bind('<Leave>', OnTextEntered)
-    log_out.bind('<ButtonPress-1>', TextClick)
-    confidential_politics = ttk.Label(master=main_frame, text="Политика конфиденциальности", font=("Arial", 18), background="white", cursor="hand2")
-    confidential_politics.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
-    confidential_politics.bind('<Enter>', OnTextEntered)
-    confidential_politics.bind('<Leave>', OnTextEntered)
-    confidential_politics.bind('<ButtonPress-1>', TextClick)
-    ensurance = ttk.Label(master=main_frame, text="Страхование", font=("Arial", 18), background="white", cursor="hand2")
-    ensurance.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
-    ensurance.bind('<Enter>', OnTextEntered)
-    ensurance.bind('<Leave>', OnTextEntered)
-    ensurance.bind('<ButtonPress-1>', TextClick)
+        main_canvas.pack(fill=BOTH, padx=158)
+        main_frame.pack(fill=BOTH, padx=158)
+        
+        username_label = ttk.Label(master=main_frame, text=user.name, font=("Arial", 20), background="white")
+        username_label.pack(anchor=NE)
+        phone_label = ttk.Label(master=main_frame, text=user.phone, font=("Arial", 20), background="white")
+        phone_label.pack(anchor=NE)
+        email_label = ttk.Label(master=main_frame, text=user.email, font=("Arial", 20), background="white")
+        email_label.pack(anchor=NE)
+        
+        menuscreenpadd = 100
+        menuelementspady = 20
+        order_history = ttk.Label(master=main_frame, text="История заказов", font=("Arial", 22), background="white", cursor="hand2")
+        order_history.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+        order_history.bind('<Enter>', OnTextEntered)
+        order_history.bind('<Leave>', OnTextEntered)
+        order_history.bind('<ButtonPress-1>', TextClick)
+        promocodes = ttk.Label(master=main_frame, text="Промокоды", font=("Arial", 22), background="white", cursor="hand2")
+        promocodes.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+        promocodes.bind('<Enter>', OnTextEntered)
+        promocodes.bind('<Leave>', OnTextEntered)
+        promocodes.bind('<ButtonPress-1>', TextClick)
+        collections = ttk.Label(master=main_frame, text="Колекции", font=("Arial", 22), background="white", cursor="hand2")
+        collections.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+        collections.bind('<Enter>', OnTextEntered)
+        collections.bind('<Leave>', OnTextEntered)
+        collections.bind('<ButtonPress-1>', TextClick)
+        become_a_cheif = ttk.Label(master=main_frame, text="Стать поваром", font=("Arial", 22), background="white", cursor="hand2")
+        become_a_cheif.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+        become_a_cheif.bind('<Enter>', OnTextEntered)
+        become_a_cheif.bind('<Leave>', OnTextEntered)
+        become_a_cheif.bind('<ButtonPress-1>', TextClick)
+        become_a_courier = ttk.Label(master=main_frame, text="Стать курьером", font=("Arial", 22), background="white", cursor="hand2")
+        become_a_courier.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+        become_a_courier.bind('<Enter>', OnTextEntered)
+        become_a_courier.bind('<Leave>', OnTextEntered)
+        become_a_courier.bind('<ButtonPress-1>', TextClick)
+        support = ttk.Label(master=main_frame, text="Поддержка", font=("Arial", 22), background="white", cursor="hand2")
+        support.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+        support.bind('<Enter>', OnTextEntered)
+        support.bind('<Leave>', OnTextEntered)
+        support.bind('<ButtonPress-1>', TextClick)
+        about_service = ttk.Label(master=main_frame, text="О сервисе", font=("Arial", 22), background="white", cursor="hand2")
+        about_service.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+        about_service.bind('<Enter>', OnTextEntered)
+        about_service.bind('<Leave>', OnTextEntered)
+        about_service.bind('<ButtonPress-1>', TextClick)
+        log_out = ttk.Label(master=main_frame, text="Выйти из аккаунта", font=("Arial", 22), background="white", cursor="hand2")
+        log_out.pack(anchor=NW, padx=menuscreenpadd, ipady=menuelementspady)
+        log_out.bind('<Enter>', OnTextEntered)
+        log_out.bind('<Leave>', OnTextEntered)
+        log_out.bind('<ButtonPress-1>', TextClick)
+        confidential_politics = ttk.Label(master=main_frame, text="Политика конфиденциальности", font=("Arial", 18), background="white", cursor="hand2")
+        confidential_politics.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
+        confidential_politics.bind('<Enter>', OnTextEntered)
+        confidential_politics.bind('<Leave>', OnTextEntered)
+        confidential_politics.bind('<ButtonPress-1>', TextClick)
+        ensurance = ttk.Label(master=main_frame, text="Страхование", font=("Arial", 18), background="white", cursor="hand2")
+        ensurance.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
+        ensurance.bind('<Enter>', OnTextEntered)
+        ensurance.bind('<Leave>', OnTextEntered)
+        ensurance.bind('<ButtonPress-1>', TextClick)
+    else:
+        login_window = Toplevel(master=root)
+        login_window.title("Вход в аккаунт")
+        login_window.geometry("1800x1000")
+        login_window.resizable(False, False)
+        login_window.grab_set()
+
+        form = ttk.Frame(login_window)
+        form.pack(anchor=CENTER, pady=350, ipadx=15, ipady=15)
+        login_label = ttk.Label(form, text="Вход в аккаунт", background="white", font=("Arial", 32))
+        login_label.pack(anchor=N, pady=20)
+        form_email_label = ttk.Label(form, text="Эл. почта", background="white")
+        form_email_label.pack(anchor=W, padx=12)
+        email_input = ttk.Entry(form)
+        email_input.pack(anchor=N, pady=10, fill=X, padx=10)
+        form_password_label = ttk.Label(form, text="Пароль", background="white")
+        form_password_label.pack(anchor=W, padx=12)
+        password_input = ttk.Entry(form)
+        password_input.pack(anchor=N, pady=10, fill=X, padx=10)
+        login_btn = ttk.Button(form, text="ВОЙТИ")
+        login_btn.pack(anchor=S, fill=X, pady=2, padx=15)
+        errmsg = StringVar()
+        login_error_label = ttk.Label(form, foreground="red", background="white", textvariable=errmsg)
+        login_error_label.pack(anchor=NW, padx=12, pady=5)
+        UserChecker(email_input.get(), password_input.get())
+
 
 def DishWindowCreate(name): # создание окна конкретного блюда
     window = Toplevel(master=root)
@@ -182,8 +226,8 @@ user_color = RandomCollor()
 user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
 user_canvas.pack(anchor=NE, side=RIGHT)
 idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
-user_first_letter = username.upper
-user_canvas.create_text(30.5, 30, text=username[0], fill="white", font=("Arial", 20))
+user_first_letter = user.name.upper
+user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
 user_canvas.bind("<ButtonPress-1>", UserCircleClick)
 user_canvas.bind("<Enter>", BrightlessUp)
 user_canvas.bind("<Leave>", BrightlessDown)
