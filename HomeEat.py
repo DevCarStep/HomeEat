@@ -4,6 +4,7 @@ from tkinter.messagebox import showinfo
 from random import randint
 import codecs
 import sqlite3
+import tkinter
 
 con = sqlite3.connect('userdata.db')
 cur = con.cursor()
@@ -39,22 +40,28 @@ accounts = list() # нулевой элемент - всегда пустой а
 accounts.append(Account("Войти", "", "", ""))
 accounts.append(Account("Абчихба", "abjihba@hotmail.ua", "12345678", "+7 800 555 35 35"))
     
-user = accounts[0]
+user = accounts[1]
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
 root.iconbitmap(default=r"C:\Users\224\Desktop\HomeEat\HomeEat.ico")
 root.geometry("1800x1000")    # устанавливаем размеры окна
 root.resizable(False, True)
-logo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
+logo = tkinter.PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
 
 
 upper_frame = ttk.Frame() # верхний фрейм первого окна
-upper_frame_style = ttk.Style()
+upper_frame_style = ttk.Style(master=root)
 upper_frame_style.configure("TFrame", background="white")
 
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
+
+def RestartRootWindow(window):
+    window.destroy()
+    root.update()
+    root.update_idletasks()
+    root.deiconify()
 
 def CreateFromMenuWindow(name):
     window = Toplevel(master=root)
@@ -72,7 +79,7 @@ def TextClick(event): # обработка кликера второго окн�
         elif event.widget["text"] == "Колекции":
             collections_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Колекции"
         elif event.widget["text"] == "Стать поваром":
-            become_a_cheif_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "ИСтать поваром"
+            become_a_cheif_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Стать поваром"
         elif event.widget["text"] == "Стать курьером":
             become_a_courier_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Стать курьером"
         elif event.widget["text"] == "Поддержка":
@@ -98,8 +105,22 @@ def TextClick(event): # обработка кликера второго окн�
             sc["state"] = DISABLED
             sc["yscrollcommand"] = doc_scrollbar.set
             confidential_politics_file.close()
-        elif event.widget["text"] == "Страхование":
-            ensurance_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Страхование"
+        elif event.widget["text"] == "Пользовательское соглашение":
+            user_argeement_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Пользовательское соглашение"
+            user_argeement_window.grid_columnconfigure(0, weight = 1)
+            user_argeement_window.grid_rowconfigure(0, weight = 1)
+
+            user_argeement_file = codecs.open(r"C:\Users\224\Desktop\HomeEat\user_agreement.txt", "r", "utf_8_sig")
+            content = user_argeement_file.read()
+
+            sc = Text(master=user_argeement_window, wrap=WORD)
+            sc.grid(column = 0, row = 0, sticky = NSEW)
+            doc_scrollbar = ttk.Scrollbar(master=user_argeement_window, orient = "vertical", command = sc.yview)
+            doc_scrollbar.grid(column = 1, row = 0, sticky = NS)
+            sc.insert(END, content)
+            sc["state"] = DISABLED
+            sc["yscrollcommand"] = doc_scrollbar.set
+            user_argeement_file.close()
 def OnTextEntered(event): # обработка попадания курсора второго окна
     if event.type == '7':
         event.widget['background'] = ""
@@ -118,16 +139,21 @@ def UserChecker(email, password): # функция проверки почты �
     for i in range(1, len(accounts)):
         if email == demail and password == pwd:
             user = accounts[i]
+   
             root.update()
+            root.update_idletasks()
+
             print("Succesful")
 
 def UserCircleClick(event): # создание второго окна
     if user != accounts[0]:
-        user_window = Toplevel(master=root)
+        root.withdraw()
+        user_window = Toplevel()
         user_window.title(user.name)
         user_window.geometry("1800x1000")
         user_window.resizable(False, False)
         user_window.grab_set()
+        user_window.protocol("WM_DELETE_WINDOW", lambda: RestartRootWindow(user_window))
 
         upper_frame = ttk.Frame(master=user_window) # верхний фрейм второго окна
         canvas = Canvas(master=upper_frame, background="white", width=72, height=72, highlightthickness=0)
@@ -204,19 +230,27 @@ def UserCircleClick(event): # создание второго окна
         confidential_politics.bind('<Enter>', OnTextEntered)
         confidential_politics.bind('<Leave>', OnTextEntered)
         confidential_politics.bind('<ButtonPress-1>', TextClick)
-        ensurance = ttk.Label(master=main_frame, text="Страхование", font=("Arial", 18), background="white", cursor="hand2")
-        ensurance.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
-        ensurance.bind('<Enter>', OnTextEntered)
-        ensurance.bind('<Leave>', OnTextEntered)
-        ensurance.bind('<ButtonPress-1>', TextClick)
-    else: # иначе окно входа
-        login_window = Toplevel(master=root) # создание окна входа
+        user_argeement = ttk.Label(master=main_frame, text="Пользовательское соглашение", font=("Arial", 18), background="white", cursor="hand2")
+        user_argeement.pack(anchor=NW, padx=menuscreenpadd, ipady=5)
+        user_argeement.bind('<Enter>', OnTextEntered)
+        user_argeement.bind('<Leave>', OnTextEntered)
+        user_argeement.bind('<ButtonPress-1>', TextClick)
+
+        user_window.mainloop()
+        if user == accounts[0]:
+            RestartRootWindow(user_window)
+
+    elif user == accounts[0]: # иначе окно входа
+        root.withdraw()
+        login_window = Toplevel() # создание окна входа
         login_window.title("Вход в аккаунт")
         login_window.geometry("1800x1000")
         login_window.resizable(False, False)
         login_window.grab_set()
+        login_window.update()
+        login_window.protocol("WM_DELETE_WINDOW", lambda: RestartRootWindow(login_window))
 
-        form = ttk.Frame(login_window)
+        form = ttk.Frame(login_window, style="TFrame")
         form.pack(anchor=CENTER, pady=350, ipadx=15, ipady=15)
         login_label = ttk.Label(form, text="Вход в аккаунт", background="white", font=("Arial", 32))
         login_label.pack(anchor=N, pady=20)
@@ -233,6 +267,9 @@ def UserCircleClick(event): # создание второго окна
         errmsg = StringVar()
         login_error_label = ttk.Label(form, foreground="red", background="white", textvariable=errmsg)
         login_error_label.pack(anchor=NW, padx=12, pady=5)
+        login_window.mainloop()
+        if user != accounts[0]:
+            RestartRootWindow(login_window)
 
 
 def DishWindowCreate(name): # создание окна конкретного блюда
