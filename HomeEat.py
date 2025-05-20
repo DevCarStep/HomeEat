@@ -1,10 +1,12 @@
 from tkinter import *
 from tkinter import ttk
+import tkinter.font
 from tkinter.messagebox import showinfo
 from random import randint
 import codecs
 import sqlite3
 import tkinter
+from tkinter import font
 
 con = sqlite3.connect('userdata.db')
 cur = con.cursor()
@@ -40,7 +42,7 @@ accounts = list() # нулевой элемент - всегда пустой а
 accounts.append(Account("Войти", "", "", ""))
 accounts.append(Account("Абчихба", "abjihba@hotmail.ua", "12345678", "+7 800 555 35 35"))
     
-user = accounts[1]
+user = accounts[0]
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
@@ -56,6 +58,12 @@ upper_frame_style.configure("TFrame", background="white")
 
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
+
+def OnTextUnderline(event):
+    if event.type == '7':
+        event.widget['font'] = font.Font(family="Arial", size=10, weight=NORMAL, underline=True, overstrike=False)
+    elif event.type == '8':
+        event.widget['font'] = font.Font(family="Arial", size=10, weight=NORMAL, underline=False, overstrike=False)
 
 def RestartRootWindow(window):
     window.destroy()
@@ -121,6 +129,42 @@ def TextClick(event): # обработка кликера второго окн�
             sc["state"] = DISABLED
             sc["yscrollcommand"] = doc_scrollbar.set
             user_argeement_file.close()
+        elif event.widget["text"] == "Регистрация":
+            registration_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "регистрация"
+            
+            form = ttk.Frame(master=registration_window, style="TFrame")
+            form.pack(anchor=CENTER, pady=250, ipadx=15, ipady=15)
+            registrarion_label = ttk.Label(form, text="Регистрация", background="white", font=("Arial", 32))
+            registrarion_label.pack(anchor=N, pady=20)
+            username_form_label = ttk.Label(form, text="Придумайте псевдоним", background="white")
+            username_form_label.pack(anchor=W, padx=12)
+            username_input = ttk.Entry(form)
+            username_input.pack(anchor=N, pady=10, fill=X, padx=10)
+            email_form_label = ttk.Label(form, text="E-mail", background="white")
+            email_form_label.pack(anchor=W, padx=12)
+            email_input = ttk.Entry(form)
+            email_input.pack(anchor=N, pady=10, fill=X, padx=10)
+            password_form_label = ttk.Label(form, text="Придумайте пароль", background="white")
+            password_form_label.pack(anchor=W, padx=12)
+            password_input = ttk.Entry(form, show='*')
+            password_input.pack(anchor=N, pady=10, fill=X, padx=10)
+            passwordrepeat_form_label = ttk.Label(form, text="Повторите парль", background="white")
+            passwordrepeat_form_label.pack(anchor=W, padx=12)
+            passwordrepeat_input = ttk.Entry(form, show='*')
+            passwordrepeat_input.pack(anchor=N, pady=10, fill=X, padx=10)
+            reg_btn = ttk.Button(form, text="ЗАРЕГИСТРИРОВАТЬСЯ")
+            reg_btn.pack(anchor=S, fill=X, pady=2, padx=15)
+            errmsg = StringVar()
+            reg_error_label = ttk.Label(form, foreground="red", background="white", textvariable=errmsg)
+            reg_error_label.pack(anchor=NW, padx=12, pady=5)
+            font1 = font.Font(family="Arial", size=10, weight=NORMAL, underline=False, overstrike=False)
+            login_label = ttk.Label(form, foreground="#0089EC", background="white", text="Есть аккаунт? Авторизация", font=font1)
+            login_label.pack(anchor=S, padx=15, pady=2)
+            login_label.bind('<ButtonPress-1>', UserCircleClick)
+            login_label.bind('<Enter>', OnTextUnderline)
+            login_label.bind('<Leave>', OnTextUnderline)
+
+
 def OnTextEntered(event): # обработка попадания курсора второго окна
     if event.type == '7':
         event.widget['background'] = ""
@@ -267,6 +311,12 @@ def UserCircleClick(event): # создание второго окна
         errmsg = StringVar()
         login_error_label = ttk.Label(form, foreground="red", background="white", textvariable=errmsg)
         login_error_label.pack(anchor=NW, padx=12, pady=5)
+        font1 = font.Font(family="Arial", size=10, weight=NORMAL, underline=False, overstrike=False)
+        registration_label = ttk.Label(form, foreground="#0089EC", background="white", text="Регистрация", font=font1)
+        registration_label.pack(anchor=S, padx=15, pady=2)
+        registration_label.bind('<ButtonPress-1>', TextClick)
+        registration_label.bind('<Enter>', OnTextUnderline)
+        registration_label.bind('<Leave>', OnTextUnderline)
         login_window.mainloop()
         if user != accounts[0]:
             RestartRootWindow(login_window)
