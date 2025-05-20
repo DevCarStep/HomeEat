@@ -59,6 +59,53 @@ upper_frame_style.configure("TFrame", background="white")
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
 
+def RegistrationAllowing(username, email, phone, password, rep_password):
+    check_counter = 0
+    warn = ""
+    if username == "":
+        warn = "Name can't be empty"
+    else:
+        check_counter += 1
+    if email == "":
+        warn = "Email can't be empty"
+    else:
+        check_counter += 1
+    if phone == "":
+        warn = "Phone can't be empty"
+    else:
+        check_counter += 1
+    if len(password) < 8 and len(password) > 30:
+        warn = "Too short or too long password"
+    else:
+        check_counter += 1
+    if password != rep_password:
+        warn = "Repeat password correctly"
+    else:
+        check_counter += 1
+    if check_counter == 5:
+        return True
+    else:
+        return False
+
+def Registration(username, email, phone , password, rep_password):
+    if RegistrationAllowing(username, email, phone, password, rep_password):
+        try:
+            con = sqlite3.connect('userdata.db')
+            cur = con.cursor()
+            cur.execute("INSERT INTO record VALUES (:name, :email, :phone, :password)", {
+                            'name': username,
+                            'email': email,
+                            'phone': phone,
+                            'password': password
+
+            })
+            con.commit()
+        except Exception as ep:
+            print('error')
+    else:
+        print("")
+
+
 def OnTextUnderline(event):
     if event.type == '7':
         event.widget['font'] = font.Font(family="Arial", size=10, weight=NORMAL, underline=True, overstrike=False)
@@ -144,6 +191,10 @@ def TextClick(event): # обработка кликера второго окн�
             email_form_label.pack(anchor=W, padx=12)
             email_input = ttk.Entry(form)
             email_input.pack(anchor=N, pady=10, fill=X, padx=10)
+            phone_form_label = ttk.Label(form, text="Номер телефона", background="white")
+            phone_form_label.pack(anchor=W, padx=12)
+            phone_input = ttk.Entry(form)
+            phone_input.pack(anchor=N, pady=10, fill=X, padx=10)
             password_form_label = ttk.Label(form, text="Придумайте пароль", background="white")
             password_form_label.pack(anchor=W, padx=12)
             password_input = ttk.Entry(form, show='*')
@@ -152,18 +203,17 @@ def TextClick(event): # обработка кликера второго окн�
             passwordrepeat_form_label.pack(anchor=W, padx=12)
             passwordrepeat_input = ttk.Entry(form, show='*')
             passwordrepeat_input.pack(anchor=N, pady=10, fill=X, padx=10)
-            reg_btn = ttk.Button(form, text="ЗАРЕГИСТРИРОВАТЬСЯ")
+            reg_btn = ttk.Button(form, text="ЗАРЕГИСТРИРОВАТЬСЯ", command= lambda: Registration(username_input.get(), email_input.get(), phone_input.get(), password_input.get(), passwordrepeat_input.get()))
             reg_btn.pack(anchor=S, fill=X, pady=2, padx=15)
             errmsg = StringVar()
             reg_error_label = ttk.Label(form, foreground="red", background="white", textvariable=errmsg)
             reg_error_label.pack(anchor=NW, padx=12, pady=5)
             font1 = font.Font(family="Arial", size=10, weight=NORMAL, underline=False, overstrike=False)
-            login_label = ttk.Label(form, foreground="#0089EC", background="white", text="Есть аккаунт? Авторизация", font=font1)
+            login_label = ttk.Label(form, foreground="#0089EC", background="white", text="Есть аккаунт? Авторизация", font=font1, cursor="hand2")
             login_label.pack(anchor=S, padx=15, pady=2)
             login_label.bind('<ButtonPress-1>', UserCircleClick)
             login_label.bind('<Enter>', OnTextUnderline)
             login_label.bind('<Leave>', OnTextUnderline)
-
 
 def OnTextEntered(event): # обработка попадания курсора второго окна
     if event.type == '7':
@@ -312,7 +362,7 @@ def UserCircleClick(event): # создание второго окна
         login_error_label = ttk.Label(form, foreground="red", background="white", textvariable=errmsg)
         login_error_label.pack(anchor=NW, padx=12, pady=5)
         font1 = font.Font(family="Arial", size=10, weight=NORMAL, underline=False, overstrike=False)
-        registration_label = ttk.Label(form, foreground="#0089EC", background="white", text="Регистрация", font=font1)
+        registration_label = ttk.Label(form, foreground="#0089EC", background="white", text="Регистрация", font=font1, cursor="hand2")
         registration_label.pack(anchor=S, padx=15, pady=2)
         registration_label.bind('<ButtonPress-1>', TextClick)
         registration_label.bind('<Enter>', OnTextUnderline)
@@ -320,7 +370,6 @@ def UserCircleClick(event): # создание второго окна
         login_window.mainloop()
         if user != accounts[0]:
             RestartRootWindow(login_window)
-
 
 def DishWindowCreate(name): # создание окна конкретного блюда
     window = Toplevel(master=root)
@@ -366,17 +415,16 @@ upper_frame.pack(anchor=N, fill=X, padx=315, pady=0)
 
 separation_line = Canvas(width=1170, height=1, background="black").pack()
 
-
 main_canvas = Canvas(root, scrollregion=(0, 0, 5000, 5000)) # главный фрейм первого окна
 scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=canvas.yview)
 main_frame = ttk.Frame(main_canvas)
 
 def CreateDishWidget(): # функция создания карточек блююда
-    element = ttk.Frame(master=main_frame, height=250, width=210, borderwidth=1, relief=SOLID)
+    element = ttk.Frame(master=main_frame, height=400, width=362, borderwidth=1, relief=SOLID)
     element.pack_propagate(False) 
     photo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
-    photo_canvas = Canvas(element, width=190, height=190)
-    photo_canvas.pack(pady=8)
+    photo_canvas = Canvas(element, width=290, height=290)
+    photo_canvas.pack(pady=20)
     photo_canvas.create_image(95, 95, image=photo)
     photo_canvas.bind('<ButtonPress-1>', DishCardClick)
     name_label = ttk.Label(master=element, text="nullreference", font=("Arial", 16))
@@ -385,7 +433,7 @@ def CreateDishWidget(): # функция создания карточек бл�
     element.bind('<ButtonPress-1>', DishCardClick)
     return element
 for i in range(4):
-    for j in range(5):
+    for j in range(3):
         element = CreateDishWidget()
         element.grid(row=i, column=j, padx=5, pady=5, ipadx=6, ipady=6, sticky= EW)
 
