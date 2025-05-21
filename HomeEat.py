@@ -31,18 +31,23 @@ cur = con.cursor()
 # con.commit()
 
 class Account:
-    def __init__(self, name, email, password, phone):
+    def __init__(self, name, email, phone, password):
         self.name = name
         self.email = email
-        self.password = password
         self.phone = phone
+        self.password = password
 
 
 accounts = list() # нулевой элемент - всегда пустой аккаунт
 accounts.append(Account("Войти", "", "", ""))
-accounts.append(Account("Абчихба", "abjihba@hotmail.ua", "12345678", "+7 800 555 35 35"))
+#accounts.append(Account("Абчихба", "abjihba@hotmail.ua", "12345678", "+7 800 555 35 35"))
+
+con = sqlite3.connect('userdata.db')
+cur = con.cursor()
+for row in con.execute("Select * from record"):
+    accounts.append(Account(row[1], row[2], row[3], row[4]))
     
-user = accounts[0]
+user = accounts[2]
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
@@ -50,7 +55,6 @@ root.iconbitmap(default=r"C:\Users\224\Desktop\HomeEat\HomeEat.ico")
 root.geometry("1800x1000")    # устанавливаем размеры окна
 root.resizable(False, True)
 logo = tkinter.PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
-
 
 upper_frame = ttk.Frame() # верхний фрейм первого окна
 upper_frame_style = ttk.Style(master=root)
@@ -92,7 +96,7 @@ def Registration(username, email, phone , password, rep_password):
         try:
             con = sqlite3.connect('userdata.db')
             cur = con.cursor()
-            cur.execute("INSERT INTO record VALUES (:name, :email, :phone, :password)", {
+            cur.execute("INSERT INTO record (name, email, phone, password) VALUES (:name, :email, :phone, :password)", {
                             'name': username,
                             'email': email,
                             'phone': phone,
@@ -100,11 +104,11 @@ def Registration(username, email, phone , password, rep_password):
 
             })
             con.commit()
+            print("Succesful")
         except Exception as ep:
-            print('error')
+            print(ep)
     else:
-        print("")
-
+        print("Not allowed")
 
 def OnTextUnderline(event):
     if event.type == '7':
@@ -178,7 +182,8 @@ def TextClick(event): # обработка кликера второго окн�
             user_argeement_file.close()
         elif event.widget["text"] == "Регистрация":
             registration_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "регистрация"
-            
+            registration_window.protocol("WM_DELETE_WINDOW", lambda: RestartRootWindow(registration_window))
+
             form = ttk.Frame(master=registration_window, style="TFrame")
             form.pack(anchor=CENTER, pady=250, ipadx=15, ipady=15)
             registrarion_label = ttk.Label(form, text="Регистрация", background="white", font=("Arial", 32))
@@ -238,6 +243,7 @@ def UserChecker(email, password): # функция проверки почты �
             root.update_idletasks()
 
             print("Succesful")
+            print("Logged", accounts[i].name)
 
 def UserCircleClick(event): # создание второго окна
     if user != accounts[0]:
@@ -336,7 +342,10 @@ def UserCircleClick(event): # создание второго окна
 
     elif user == accounts[0]: # иначе окно входа
         root.withdraw()
-        login_window = Toplevel() # создание окна входа
+        if "login_window" in locals():
+            login_window.deiconify()
+        else:
+            login_window = Toplevel() # создание окна входа
         login_window.title("Вход в аккаунт")
         login_window.geometry("1800x1000")
         login_window.resizable(False, False)
