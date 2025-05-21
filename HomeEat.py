@@ -7,6 +7,7 @@ import codecs
 import sqlite3
 import tkinter
 from tkinter import font
+from tkinter import colorchooser
 
 con = sqlite3.connect('userdata.db')
 cur = con.cursor()
@@ -55,6 +56,12 @@ root.iconbitmap(default=r"C:\Users\224\Desktop\HomeEat\HomeEat.ico")
 root.geometry("1800x1000")    # устанавливаем размеры окна
 root.resizable(False, True)
 logo = tkinter.PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
+def RandomCollor(): # генератор случайного цвета
+    colorgen = lambda: randint(0,255)
+    color = '#%02X%02X%02X' % (colorgen(), colorgen(), colorgen())
+    return str(color)
+user_color = RandomCollor()
+new_color_var = StringVar(value=user_color)
 
 upper_frame = ttk.Frame() # верхний фрейм первого окна
 upper_frame_style = ttk.Style(master=root)
@@ -63,7 +70,13 @@ upper_frame_style.configure("TFrame", background="white")
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
 
-def RegistrationAllowing(username, email, phone, password, rep_password):
+def UserMenuCircleClickToChangeColor(event):
+    global user_color
+    result = colorchooser.askcolor(initialcolor=user_color)
+    new_color_var = result[1]
+    user_canvas.itemconfigure(idOval, fill=new_color_var, outline=new_color_var)
+
+def RegistrationAllowing(username, email, phone, password, rep_password): # проверка на соответствие требованиям регистрации
     check_counter = 0
     warn = ""
     if username == "":
@@ -91,7 +104,7 @@ def RegistrationAllowing(username, email, phone, password, rep_password):
     else:
         return False
 
-def Registration(username, email, phone , password, rep_password):
+def Registration(username, email, phone , password, rep_password): # функция регистрации
     if RegistrationAllowing(username, email, phone, password, rep_password):
         try:
             con = sqlite3.connect('userdata.db')
@@ -116,7 +129,7 @@ def OnTextUnderline(event):
     elif event.type == '8':
         event.widget['font'] = font.Font(family="Arial", size=10, weight=NORMAL, underline=False, overstrike=False)
 
-def RestartRootWindow(window):
+def RestartRootWindow(window): # показ главного окна, если оно свёрнуто
     window.destroy()
     root.update()
     root.update_idletasks()
@@ -263,7 +276,9 @@ def UserCircleClick(event): # создание второго окна
 
         user_canvas = Canvas(master=upper_frame, background="white", highlightthickness=0, height=60, width=60)
         user_canvas.pack(anchor=NE, side=RIGHT)
-        idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
+        idOval = user_canvas.create_oval(2, 2, 58, 58, fill=new_color_var.get(), outline=new_color_var.get(), tags=["clickable", "weakbutton"])
+        user_canvas.bind("<ButtonPress-1>", UserMenuCircleClickToChangeColor)
+        user_canvas.itemconfigure(idOval, fill=new_color_var.get(), outline=new_color_var.get())
         user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
 
         label = ttk.Label(upper_frame, text="Профиль", background="white", font= ("Arial", 20)).pack()
@@ -337,6 +352,8 @@ def UserCircleClick(event): # создание второго окна
         user_argeement.bind('<ButtonPress-1>', TextClick)
 
         user_window.mainloop()
+        user_window.update()
+        user_window.update_idletasks()
         if user == accounts[0]:
             RestartRootWindow(user_window)
 
@@ -386,6 +403,7 @@ def DishWindowCreate(name): # создание окна конкретного �
     window.geometry("1800x1000")
     window.resizable(False, False)
     window.grab_set()
+
     return window
 
 def DishCardClick(event): # событие клика на карточку блюда
@@ -395,14 +413,9 @@ def BrightlessUp(event):
     more_bright = user_color
     canvas.itemconfigure("weakbutton", fill=more_bright)
 def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill=user_color);
-def RandomCollor(): # генератор случайного цвета
-    colorgen = lambda: randint(0,255)
-    color = '#%02X%02X%02X' % (colorgen(), colorgen(), colorgen())
-    return str(color)
-user_color = RandomCollor()
 user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
 user_canvas.pack(anchor=NE, side=RIGHT)
-idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
+idOval = user_canvas.create_oval(2, 2, 58, 58, fill=new_color_var.get(), outline=new_color_var.get(), tags=["clickable", "weakbutton"])
 user_first_letter = user.name.upper
 user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
 user_canvas.bind("<ButtonPress-1>", UserCircleClick)
