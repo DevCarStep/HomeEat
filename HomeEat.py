@@ -61,7 +61,6 @@ def RandomCollor(): # генератор случайного цвета
     color = '#%02X%02X%02X' % (colorgen(), colorgen(), colorgen())
     return str(color)
 user_color = RandomCollor()
-new_color_var = StringVar(value=user_color)
 
 upper_frame = ttk.Frame() # верхний фрейм первого окна
 upper_frame_style = ttk.Style(master=root)
@@ -73,8 +72,8 @@ canvas.pack(anchor="nw", side=LEFT)
 def UserMenuCircleClickToChangeColor(event):
     global user_color
     result = colorchooser.askcolor(initialcolor=user_color)
-    new_color_var = result[1]
-    user_canvas.itemconfigure(idOval, fill=new_color_var, outline=new_color_var)
+    user_color = result[1]
+    user_canvas.itemconfigure(idOval, fill=user_color, outline=user_color)
 
 def RegistrationAllowing(username, email, phone, password, rep_password): # проверка на соответствие требованиям регистрации
     check_counter = 0
@@ -276,9 +275,9 @@ def UserCircleClick(event): # создание второго окна
 
         user_canvas = Canvas(master=upper_frame, background="white", highlightthickness=0, height=60, width=60)
         user_canvas.pack(anchor=NE, side=RIGHT)
-        idOval = user_canvas.create_oval(2, 2, 58, 58, fill=new_color_var.get(), outline=new_color_var.get(), tags=["clickable", "weakbutton"])
+        idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
         user_canvas.bind("<ButtonPress-1>", UserMenuCircleClickToChangeColor)
-        user_canvas.itemconfigure(idOval, fill=new_color_var.get(), outline=new_color_var.get())
+        user_canvas.itemconfigure(idOval, fill=user_color, outline=user_color)
         user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
 
         label = ttk.Label(upper_frame, text="Профиль", background="white", font= ("Arial", 20)).pack()
@@ -415,7 +414,7 @@ def BrightlessUp(event):
 def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill=user_color);
 user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
 user_canvas.pack(anchor=NE, side=RIGHT)
-idOval = user_canvas.create_oval(2, 2, 58, 58, fill=new_color_var.get(), outline=new_color_var.get(), tags=["clickable", "weakbutton"])
+idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
 user_first_letter = user.name.upper
 user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
 user_canvas.bind("<ButtonPress-1>", UserCircleClick)
