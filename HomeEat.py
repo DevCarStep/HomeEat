@@ -9,7 +9,7 @@ import tkinter
 from tkinter import font
 from tkinter import colorchooser
 
-con = sqlite3.connect('userdata.db')
+con = sqlite3.connect('userdata.db') # запрос на создание таблицы пользователей, если её не существует
 cur = con.cursor()
 cur.execute('''CREATE TABLE IF NOT EXISTS record(
                     id integer primary key,
@@ -20,7 +20,7 @@ cur.execute('''CREATE TABLE IF NOT EXISTS record(
                 )
             ''')
 con.commit()
-con = sqlite3.connect('userdata.db')
+con = sqlite3.connect('userdata.db') # запрос на создание таблицы блюд, если её не существует
 cur = con.cursor()
 cur.execute('''CREATE TABLE IF NOT EXISTS dishes(
                     id integer primary key,
@@ -41,14 +41,14 @@ con.commit()
 #             })
 # con.commit()
 
-class Account:
+class Account: # класс аккаунта
     def __init__(self, name, email, phone, password):
         self.name = name
         self.email = email
         self.phone = phone
         self.password = password
 
-class Dish:
+class Dish: # класс блюда
     def __init__(self, name, price, composition, weight, photo):
         self.name = name
         self.price = price
@@ -147,7 +147,7 @@ def Registration(username, email, phone , password, rep_password): # функц�
     else:
         print("Not allowed")
 
-def OnTextUnderline(event):
+def OnTextUnderline(event): # подчёркивание на наведение на текст
     if event.type == '7':
         event.widget['font'] = font.Font(family="Arial", size=10, weight=NORMAL, underline=True, overstrike=False)
     elif event.type == '8':
@@ -435,16 +435,16 @@ def DishWindowCreate(name): # создание окна конкретного �
 
     dish_frame = ttk.Frame(master=window)
     dish_frame.pack(anchor=N, padx=315, side=TOP, fill=BOTH)
-    photo_canvas = Canvas(master=dish_frame, highlightbackground="white")
-    photo_canvas.grid(row=0, column=0, rowspan=4, padx=80, pady=100, sticky=NW)
+    photo_canvas = Canvas(master=dish_frame, width=290, height=290, highlightbackground="white")
+    photo_canvas.grid(row=0, column=0, rowspan=4, padx=80, pady=100, sticky=N)
     name_label = ttk.Label(dish_frame, text="nullreference", font=("Arial", 32), background="white", wraplength=500)
     name_label.grid(row=0,column=1, sticky=W)
     price_weight_label = ttk.Label(dish_frame, text="0" + " рублей, " + "0" + " грамм", background="white", font=("Arial", 20), wraplength=400)
     price_weight_label.grid(row=1,column=1, sticky=NW)
     sostav = ttk.Label(dish_frame, text="Состав:", background="white", font=("Arial", 20))
-    sostav.grid(row=2, column=1, sticky=NW)
+    sostav.grid(row=2, column=1, sticky=NSEW)
     composition_label = ttk.Label(dish_frame, text="-\n-\n-\n-\n", background="white", font=("Arial", 20))
-    composition_label.grid(row=3, column=1, sticky=NW)
+    composition_label.grid(row=3, column=1, sticky=NSEW)
     back_btn = ttk.Button(master=dish_frame, text="Назад", command= lambda: RestartRootWindow(window))
     back_btn.grid(row=4, column=0, sticky=SW, padx=30, pady=20)
     order_btn = ttk.Button(master=dish_frame, text="Заказать")
