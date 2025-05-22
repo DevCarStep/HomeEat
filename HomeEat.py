@@ -433,6 +433,16 @@ def DishWindowCreate(name): # создание окна конкретного �
     window.resizable(False, False)
     window.grab_set()
 
+    dish_frame = ttk.Frame(master=window)
+    dish_frame.pack(anchor=N, pady=315, side=TOP)
+    photo_canvas = Canvas(master=dish_frame, highlightbackground="white")
+    photo_canvas.grid(row=0, column=0, rowspan=3, padx=80, pady=100, sticky=NW)
+    name_label = ttk.Label(dish_frame, text="nullreference", font=("Arial", 32), background="white", wraplength=500)
+    name_label.grid(row=0,column=1, padx=40, sticky=W)
+    price_weight_label = ttk.Label(dish_frame, text="0" + " рублей, " + "0" + " грамм", background="white", font=("Arial", 20), wraplength=400)
+    price_weight_label.grid(row=1,column=1, sticky=NW)
+    sostav = ttk.Label(dish_frame, text="Состав:", background="white", font=("Arial", 20))
+    sostav.grid(row=2, column=1, sticky=NW)
     return window
 
 def DishCardClick(event): # событие клика на карточку блюда
@@ -474,7 +484,7 @@ def CreateDishWidget(dish): # функция создания карточек �
     element = ttk.Frame(master=main_frame, height=400, width=362, borderwidth=1, relief=SOLID)
     element.pack_propagate(False)
     photo = dish.photo
-    photo_canvas = Canvas(element, width=290, height=290)
+    photo_canvas = Canvas(element, width=290, height=290, highlightbackground="white")
     photo_canvas.pack(pady=20)
     photo_canvas.create_image(145, 145, image=photo)
     photo_canvas.bind('<ButtonPress-1>', DishCardClick)
@@ -482,6 +492,7 @@ def CreateDishWidget(dish): # функция создания карточек �
     name_label.pack(anchor=NW, padx=8, pady=4)
     price_label = ttk.Label(master=element, text=str(dish.price) + "₽", font=("Arial", 12), foreground="#AAAAAA", background="white")
     price_label.pack(anchor=W, padx=8, pady=5)
+    price_label.bind('<ButtonPress-1>', DishCardClick)
     name_label.bind('<ButtonPress-1>', DishCardClick)
     element.bind('<ButtonPress-1>', DishCardClick)
     return element
