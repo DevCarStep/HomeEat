@@ -22,6 +22,16 @@ cur.execute('''CREATE TABLE IF NOT EXISTS record(
 con.commit()
 con = sqlite3.connect('userdata.db')
 cur = con.cursor()
+cur.execute('''CREATE TABLE IF NOT EXISTS dishes(
+                    id integer primary key,
+                    name text, 
+                    price int,
+                    composition text,
+                    weight int,
+                    photo text
+                )
+            ''')
+con.commit()
 # cur.execute("INSERT INTO record(name, email, phone, password) VALUES (:name, :email, :phone, :password)", {
 #                             'name': "Абчихба",
 #                             'email': "abjihba@hotmail.ua",
@@ -38,17 +48,26 @@ class Account:
         self.phone = phone
         self.password = password
 
+class Dish:
+    def __init__(self, name, price, composition, weight, photo):
+        self.name = name
+        self.price = price
+        self.composition = composition
+        self.weight = weight
+        self.photo = photo
+
 
 accounts = list() # нулевой элемент - всегда пустой аккаунт
 accounts.append(Account("Войти", "", "", ""))
 #accounts.append(Account("Абчихба", "abjihba@hotmail.ua", "12345678", "+7 800 555 35 35"))
+dishes = list()
 
 con = sqlite3.connect('userdata.db')
 cur = con.cursor()
 for row in con.execute("Select * from record"):
     accounts.append(Account(row[1], row[2], row[3], row[4]))
     
-user = accounts[0]
+user = accounts[0] # текущий пользователь
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
@@ -61,6 +80,11 @@ def RandomCollor(): # генератор случайного цвета
     color = '#%02X%02X%02X' % (colorgen(), colorgen(), colorgen())
     return str(color)
 user_color = RandomCollor()
+con = sqlite3.connect('userdata.db')
+cur = con.cursor()
+for row in con.execute("Select * from dishes"):
+    insert_photo = tkinter.PhotoImage(file=r"C:\Users\224\Desktop" + row[5])
+    dishes.append(Dish(row[1], row[2], row[3], row[4], insert_photo))
 
 upper_frame = ttk.Frame() # верхний фрейм первого окна
 upper_frame_style = ttk.Style(master=root)
@@ -446,23 +470,27 @@ main_canvas = Canvas(root, scrollregion=(0, 0, 5000, 5000)) # главный ф�
 scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=canvas.yview)
 main_frame = ttk.Frame(main_canvas)
 
-def CreateDishWidget(): # функция создания карточек блююда
+def CreateDishWidget(dish): # функция создания карточек блююда
     element = ttk.Frame(master=main_frame, height=400, width=362, borderwidth=1, relief=SOLID)
-    element.pack_propagate(False) 
-    photo = PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
+    element.pack_propagate(False)
+    photo = dish.photo
     photo_canvas = Canvas(element, width=290, height=290)
     photo_canvas.pack(pady=20)
-    photo_canvas.create_image(95, 95, image=photo)
+    photo_canvas.create_image(145, 145, image=photo)
     photo_canvas.bind('<ButtonPress-1>', DishCardClick)
-    name_label = ttk.Label(master=element, text="nullreference", font=("Arial", 16))
-    name_label.pack()
+    name_label = ttk.Label(master=element, text=dish.name, font=("Arial", 16), background="white")
+    name_label.pack(anchor=NW, padx=8, pady=4)
+    price_label = ttk.Label(master=element, text=str(dish.price) + "₽", font=("Arial", 12), foreground="#AAAAAA", background="white")
+    price_label.pack(anchor=W, padx=8, pady=5)
     name_label.bind('<ButtonPress-1>', DishCardClick)
     element.bind('<ButtonPress-1>', DishCardClick)
     return element
-for i in range(4):
+incr = 0
+for i in range(3):
     for j in range(3):
-        element = CreateDishWidget()
+        element = CreateDishWidget(dish=dishes[incr])
         element.grid(row=i, column=j, padx=5, pady=5, ipadx=6, ipady=6, sticky= EW)
+        incr += 1
 
 scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=main_canvas.yview)
 scrollbar.pack(side=RIGHT, fill=Y)
