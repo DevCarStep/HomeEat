@@ -434,15 +434,21 @@ def DishWindowCreate(name): # создание окна конкретного �
     window.grab_set()
 
     dish_frame = ttk.Frame(master=window)
-    dish_frame.pack(anchor=N, pady=315, side=TOP)
+    dish_frame.pack(anchor=N, padx=315, side=TOP, fill=BOTH)
     photo_canvas = Canvas(master=dish_frame, highlightbackground="white")
-    photo_canvas.grid(row=0, column=0, rowspan=3, padx=80, pady=100, sticky=NW)
+    photo_canvas.grid(row=0, column=0, rowspan=4, padx=80, pady=100, sticky=NW)
     name_label = ttk.Label(dish_frame, text="nullreference", font=("Arial", 32), background="white", wraplength=500)
-    name_label.grid(row=0,column=1, padx=40, sticky=W)
+    name_label.grid(row=0,column=1, sticky=W)
     price_weight_label = ttk.Label(dish_frame, text="0" + " рублей, " + "0" + " грамм", background="white", font=("Arial", 20), wraplength=400)
     price_weight_label.grid(row=1,column=1, sticky=NW)
     sostav = ttk.Label(dish_frame, text="Состав:", background="white", font=("Arial", 20))
     sostav.grid(row=2, column=1, sticky=NW)
+    composition_label = ttk.Label(dish_frame, text="-\n-\n-\n-\n", background="white", font=("Arial", 20))
+    composition_label.grid(row=3, column=1, sticky=NW)
+    back_btn = ttk.Button(master=dish_frame, text="Назад", command= lambda: RestartRootWindow(window))
+    back_btn.grid(row=4, column=0, sticky=SW, padx=30, pady=20)
+    order_btn = ttk.Button(master=dish_frame, text="Заказать")
+    order_btn.grid(row=4, column=1, sticky=SE, padx=30, pady=20)
     return window
 
 def DishCardClick(event): # событие клика на карточку блюда
