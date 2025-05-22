@@ -48,7 +48,7 @@ cur = con.cursor()
 for row in con.execute("Select * from record"):
     accounts.append(Account(row[1], row[2], row[3], row[4]))
     
-user = accounts[2]
+user = accounts[0]
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
@@ -75,27 +75,28 @@ def UserMenuCircleClickToChangeColor(event):
     user_color = result[1]
     user_canvas.itemconfigure(idOval, fill=user_color, outline=user_color)
 
+reg_warn = StringVar(value='')
 def RegistrationAllowing(username, email, phone, password, rep_password): # проверка на соответствие требованиям регистрации
     check_counter = 0
-    warn = ""
+    global reg_warn
     if username == "":
-        warn = "Name can't be empty"
+        reg_warn = "Name can't be empty"
     else:
         check_counter += 1
     if email == "":
-        warn = "Email can't be empty"
+        reg_warn = "Email can't be empty"
     else:
         check_counter += 1
     if phone == "":
-        warn = "Phone can't be empty"
+        reg_warn = "Phone can't be empty"
     else:
         check_counter += 1
     if len(password) < 8 and len(password) > 30:
-        warn = "Too short or too long password"
+        reg_warn = "Too short or too long password"
     else:
         check_counter += 1
     if password != rep_password:
-        warn = "Repeat password correctly"
+        reg_warn = "Repeat password correctly"
     else:
         check_counter += 1
     if check_counter == 5:
@@ -158,6 +159,7 @@ def TextClick(event): # обработка кликера второго окн�
         elif event.widget["text"] == "О сервисе":
             about_service_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "О сервисе"
         elif event.widget["text"] == "Выйти из аккаунта":
+            global user
             user = accounts[0]
             root.update()
         elif event.widget["text"] == "Политика конфиденциальности":
@@ -222,7 +224,8 @@ def TextClick(event): # обработка кликера второго окн�
             passwordrepeat_input.pack(anchor=N, pady=10, fill=X, padx=10)
             reg_btn = ttk.Button(form, text="ЗАРЕГИСТРИРОВАТЬСЯ", command= lambda: Registration(username_input.get(), email_input.get(), phone_input.get(), password_input.get(), passwordrepeat_input.get()))
             reg_btn.pack(anchor=S, fill=X, pady=2, padx=15)
-            errmsg = StringVar()
+            global reg_warn
+            errmsg = StringVar(value=reg_warn)
             reg_error_label = ttk.Label(form, foreground="red", background="white", textvariable=errmsg)
             reg_error_label.pack(anchor=NW, padx=12, pady=5)
             font1 = font.Font(family="Arial", size=10, weight=NORMAL, underline=False, overstrike=False)
@@ -239,23 +242,26 @@ def OnTextEntered(event): # обработка попадания курсора
         event.widget['background'] = "white"
 
 def UserChecker(email, password): # функция проверки почты и пароля
+    global user
+    global login_window
     try:
         con = sqlite3.connect('userdata.db')
         c = con.cursor()
     except Exception as ep:
         print('error')
-    for row in c.execute("Select * from record"):
-        demail = row[2]
-        pwd = row[4]
-    for i in range(1, len(accounts)):
-        if email == demail and password == pwd:
-            user = accounts[i]
+    # for row in c.execute("Select * from record"):
+    #     demail = row[2]
+    #     pwd = row[4]
+    for i in accounts:
+        if email == i.email and password == i.password:
+            user = i
    
             root.update()
             root.update_idletasks()
 
             print("Succesful")
-            print("Logged", accounts[i].name)
+            print("Logged", i.name)
+            break
 
 def UserCircleClick(event): # создание второго окна
     if user != accounts[0]:
