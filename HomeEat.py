@@ -144,6 +144,7 @@ def Registration(username, email, phone , password, rep_password): # функц�
 
             })
             con.commit()
+            global user
             accounts.append(Account(username, email, phone, password))
             user = accounts[len(accounts)-1]
             print("Succesful")
@@ -322,7 +323,7 @@ def UserCircleClick(event): # создание второго окна
         idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
         user_canvas.bind("<ButtonPress-1>", UserMenuCircleClickToChangeColor)
         user_canvas.itemconfigure(idOval, fill=user_color, outline=user_color)
-        user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
+        user_canvas.create_text(30.5, 30, text=user.name[0].upper(), fill="white", font=("Arial", 20))
 
         label = ttk.Label(upper_frame, text="Профиль", background="white", font= ("Arial", 20)).pack()
 
@@ -475,8 +476,8 @@ def BrightlessDown(event): canvas.itemconfigure("weakbutton", fill=user_color);
 user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, height=60, width=60)
 user_canvas.pack(anchor=NE, side=RIGHT)
 idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
-user_first_letter = user.name.upper
-user_letter_text = user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
+user_first_letter = user.name.upper()
+user_letter_text = user_canvas.create_text(30.5, 30, text=user.name[0].upper(), fill="white", font=("Arial", 20))
 user_canvas.itemconfigure(user_letter_text, text=user.name[0])
 user_canvas.bind("<ButtonPress-1>", UserCircleClick)
 user_canvas.bind("<Enter>", BrightlessUp)
