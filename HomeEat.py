@@ -97,7 +97,10 @@ def UserMenuCircleClickToChangeColor(event):
     global user_color
     result = colorchooser.askcolor(initialcolor=user_color)
     user_color = result[1]
-    user_canvas.itemconfigure(idOval, fill=user_color, outline=user_color)
+    if result is not None:
+        user_canvas.itemconfigure(idOval, fill=user_color, outline=user_color)
+        RestartRootWindow(user_window)
+        UserCircleClick('<ButtonPress-1>')
 
 reg_warn = StringVar(value='')
 def RegistrationAllowing(username, email, phone, password, rep_password): # проверка на соответствие требованиям регистрации
@@ -141,7 +144,11 @@ def Registration(username, email, phone , password, rep_password): # функц�
 
             })
             con.commit()
+            accounts.append(Account(username, email, phone, password))
+            user = accounts[len(accounts)-1]
             print("Succesful")
+            UserCircleClick("<ButtonPress-1>")
+            registration_window.destroy()
         except Exception as ep:
             print(ep)
     else:
@@ -186,6 +193,8 @@ def TextClick(event): # обработка кликера второго окн�
             global user
             user = accounts[0]
             root.update()
+            RestartRootWindow(user_window)
+            UserCircleClick("<Button-Press-1>")
         elif event.widget["text"] == "Политика конфиденциальности":
             confidentiality_politics_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "Политика конфиденциальности"
             confidentiality_politics_window.grid_columnconfigure(0, weight = 1)
@@ -219,8 +228,10 @@ def TextClick(event): # обработка кликера второго окн�
             sc["yscrollcommand"] = doc_scrollbar.set
             user_argeement_file.close()
         elif event.widget["text"] == "Регистрация":
+            global registration_window
             registration_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "регистрация"
             registration_window.protocol("WM_DELETE_WINDOW", lambda: RestartRootWindow(registration_window))
+            login_window.destroy()
 
             form = ttk.Frame(master=registration_window, style="TFrame")
             form.pack(anchor=CENTER, pady=250, ipadx=15, ipady=15)
@@ -285,11 +296,14 @@ def UserChecker(email, password): # функция проверки почты �
 
             print("Succesful")
             print("Logged", i.name)
+            RestartRootWindow(login_window)
+            UserCircleClick("<ButtonPress-1>")
             break
 
 def UserCircleClick(event): # создание второго окна
     if user != accounts[0]:
         root.withdraw()
+        global user_window
         user_window = Toplevel()
         user_window.title(user.name)
         user_window.geometry("1800x1000")
@@ -388,10 +402,10 @@ def UserCircleClick(event): # создание второго окна
 
     elif user == accounts[0]: # иначе окно входа
         root.withdraw()
-        if "login_window" in locals():
-            login_window.deiconify()
-        else:
-            login_window = Toplevel() # создание окна входа
+        global login_window
+        if "registration_window" in locals():
+            registration_window.destroy()
+        login_window = Toplevel() # создание окна входа
         login_window.title("Вход в аккаунт")
         login_window.geometry("1800x1000")
         login_window.resizable(False, False)
@@ -462,7 +476,8 @@ user_canvas = Canvas(upper_frame, background="white", highlightthickness=0, heig
 user_canvas.pack(anchor=NE, side=RIGHT)
 idOval = user_canvas.create_oval(2, 2, 58, 58, fill=user_color, outline=user_color, tags=["clickable", "weakbutton"])
 user_first_letter = user.name.upper
-user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
+user_letter_text = user_canvas.create_text(30.5, 30, text=user.name[0], fill="white", font=("Arial", 20))
+user_canvas.itemconfigure(user_letter_text, text=user.name[0])
 user_canvas.bind("<ButtonPress-1>", UserCircleClick)
 user_canvas.bind("<Enter>", BrightlessUp)
 user_canvas.bind("<Leave>", BrightlessDown)
