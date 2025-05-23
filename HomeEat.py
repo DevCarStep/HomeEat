@@ -93,6 +93,37 @@ upper_frame_style.configure("TFrame", background="white")
 canvas = Canvas(upper_frame, background="white", width=72, height=72, highlightthickness=0)
 canvas.pack(anchor="nw", side=LEFT)
 
+class DishCard(ttk.Frame):
+    def __init__(self, container, dish, id):
+        super().__init__(container)
+
+        # self.element = ttk.Frame(master=self.master, height=400, width=362, borderwidth=1, relief=SOLID)
+        self.configure(height=400, width=362, borderwidth=1, relief=SOLID)
+        self.pack_propagate(False)
+
+        self.dish = dish
+        self.id = id
+
+        self.photo = dish.photo
+        self.photo_canvas = Canvas(self, width=290, height=290, highlightbackground="white")
+        self.photo_canvas.pack(pady=20)
+        self.photo_canvas.create_image(145, 145, image=self.photo)
+        self.photo_canvas.bind('<ButtonPress-1>', DishCardClick)
+        self.photo_canvas.dish = self.dish
+        self.photo_canvas.id = self.id
+        self.name_label = ttk.Label(self, text=dish.name, font=("Arial", 16), background="white")
+        self.name_label.pack(anchor=NW, padx=8, pady=4)
+        self.name_label.dish = self.dish
+        self.name_label.id = self.id
+        self.price_label = ttk.Label(self, text=str(dish.price) + "₽", font=("Arial", 12), foreground="#AAAAAA", background="white")
+        self.price_label.pack(anchor=W, padx=8, pady=5)
+        self.price_label.dish = self.dish
+        self.price_label.id = self.id
+        self.price_label.bind('<ButtonPress-1>', DishCardClick)
+        self.name_label.bind('<ButtonPress-1>', DishCardClick)
+        self.bind('<ButtonPress-1>', DishCardClick)
+
+
 def UserMenuCircleClickToChangeColor(event):
     global user_color
     result = colorchooser.askcolor(initialcolor=user_color)
@@ -441,24 +472,26 @@ def UserCircleClick(event): # создание второго окна
         if user != accounts[0]:
             RestartRootWindow(login_window)
 
-def DishWindowCreate(name): # создание окна конкретного блюда
+def DishWindowCreate(dish): # создание окна конкретного блюда
     window = Toplevel(master=root)
-    window.title(name)
+    window.title(dish.name)
     window.geometry("1800x1000")
     window.resizable(False, False)
     window.grab_set()
 
     dish_frame = ttk.Frame(master=window)
     dish_frame.pack(anchor=N, padx=315, side=TOP, fill=BOTH)
+    photo = dish.photo
     photo_canvas = Canvas(master=dish_frame, width=290, height=290, highlightbackground="white")
     photo_canvas.grid(row=0, column=0, rowspan=4, padx=80, pady=100, sticky=N)
-    name_label = ttk.Label(dish_frame, text="nullreference", font=("Arial", 32), background="white", wraplength=500)
+    photo_canvas.create_image(145, 145, image=photo)
+    name_label = ttk.Label(dish_frame, text=dish.name, font=("Arial", 32), background="white", wraplength=500)
     name_label.grid(row=0,column=1, sticky=W)
-    price_weight_label = ttk.Label(dish_frame, text="0" + " рублей, " + "0" + " грамм", background="white", font=("Arial", 20), wraplength=400)
+    price_weight_label = ttk.Label(dish_frame, text=str(dish.price) + " рублей, " + str(dish.weight) + " грамм", background="white", font=("Arial", 20), wraplength=400)
     price_weight_label.grid(row=1,column=1, sticky=NW)
     sostav = ttk.Label(dish_frame, text="Состав:", background="white", font=("Arial", 20))
     sostav.grid(row=2, column=1, sticky=NSEW)
-    composition_label = ttk.Label(dish_frame, text="-\n-\n-\n-\n", background="white", font=("Arial", 20))
+    composition_label = ttk.Label(dish_frame, text=dish.composition, background="white", font=("Arial", 20))
     composition_label.grid(row=3, column=1, sticky=NSEW)
     back_btn = ttk.Button(master=dish_frame, text="Назад", command= lambda: RestartRootWindow(window))
     back_btn.grid(row=4, column=0, sticky=SW, padx=30, pady=20)
@@ -467,7 +500,7 @@ def DishWindowCreate(name): # создание окна конкретного �
     return window
 
 def DishCardClick(event): # событие клика на карточку блюда
-    DishWindowCreate("nullreference")
+    DishWindowCreate(event.widget.dish)
 
 def BrightlessUp(event):
     more_bright = user_color
@@ -502,27 +535,35 @@ main_canvas = Canvas(root, scrollregion=(0, 0, 5000, 5000)) # главный ф�
 scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=canvas.yview)
 main_frame = ttk.Frame(main_canvas)
 
-def CreateDishWidget(dish): # функция создания карточек блююда
-    element = ttk.Frame(master=main_frame, height=400, width=362, borderwidth=1, relief=SOLID)
-    element.pack_propagate(False)
-    photo = dish.photo
-    photo_canvas = Canvas(element, width=290, height=290, highlightbackground="white")
-    photo_canvas.pack(pady=20)
-    photo_canvas.create_image(145, 145, image=photo)
-    photo_canvas.bind('<ButtonPress-1>', DishCardClick)
-    name_label = ttk.Label(master=element, text=dish.name, font=("Arial", 16), background="white")
-    name_label.pack(anchor=NW, padx=8, pady=4)
-    price_label = ttk.Label(master=element, text=str(dish.price) + "₽", font=("Arial", 12), foreground="#AAAAAA", background="white")
-    price_label.pack(anchor=W, padx=8, pady=5)
-    price_label.bind('<ButtonPress-1>', DishCardClick)
-    name_label.bind('<ButtonPress-1>', DishCardClick)
-    element.bind('<ButtonPress-1>', DishCardClick)
+def CreateDishWidget(dish, id): # функция создания карточек блююда
+    # element = ttk.Frame(master=main_frame, height=400, width=362, borderwidth=1, relief=SOLID)
+    # element.pack_propagate(False)
+    # photo = dish.photo
+    # photo_canvas = Canvas(element, width=290, height=290, highlightbackground="white")
+    # photo_canvas.pack(pady=20)
+    # photo_canvas.create_image(145, 145, image=photo)
+    # photo_canvas.bind('<ButtonPress-1>', DishCardClick)
+    # name_label = ttk.Label(master=element, text=dish.name, font=("Arial", 16), background="white")
+    # name_label.pack(anchor=NW, padx=8, pady=4)
+    # price_label = ttk.Label(master=element, text=str(dish.price) + "₽", font=("Arial", 12), foreground="#AAAAAA", background="white")
+    # price_label.pack(anchor=W, padx=8, pady=5)
+    # price_label.bind('<ButtonPress-1>', DishCardClick)
+    # name_label.bind('<ButtonPress-1>', DishCardClick)
+    # element.bind('<ButtonPress-1>', DishCardClick)
+    element = DishCard(main_frame, dish, id)
     return element
+
+elements = list()
 incr = 0
 for i in range(3):
     for j in range(3):
-        element = CreateDishWidget(dish=dishes[incr])
-        element.grid(row=i, column=j, padx=5, pady=5, ipadx=6, ipady=6, sticky= EW)
+        element = DishCard(main_frame, dish=dishes[incr], id=incr)
+        elements.append(element)
+        incr += 1
+incr = 0
+for i in range(0, 3):
+    for j in range(0, 3):
+        elements[incr].grid(row=i, column=j, padx=5, pady=5, ipadx=6, ipady=6, sticky= EW)
         incr += 1
 
 scrollbar = ttk.Scrollbar(main_canvas, orient="vertical", command=main_canvas.yview)
