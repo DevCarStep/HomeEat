@@ -75,6 +75,7 @@ root.iconbitmap(default=r"C:\Users\224\Desktop\HomeEat\HomeEat.ico")
 root.geometry("1800x1000")    # устанавливаем размеры окна
 root.resizable(False, True)
 logo = tkinter.PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
+global registration_window
 def RandomCollor(): # генератор случайного цвета
     colorgen = lambda: randint(0,255)
     color = '#%02X%02X%02X' % (colorgen(), colorgen(), colorgen())
@@ -179,6 +180,7 @@ def Registration(username, email, phone , password, rep_password): # функц�
             accounts.append(Account(username, email, phone, password))
             user = accounts[len(accounts)-1]
             print("Succesful")
+            login_window.destroy()
             UserCircleClick("<ButtonPress-1>")
             registration_window.destroy()
         except Exception as ep:
@@ -197,6 +199,7 @@ def RestartRootWindow(window): # показ главного окна, если 
     root.update()
     root.update_idletasks()
     root.deiconify()
+    registration_window.destroy()
 
 def CreateFromMenuWindow(name):
     window = Toplevel(master=root)
@@ -261,9 +264,10 @@ def TextClick(event): # обработка кликера второго окн�
             user_argeement_file.close()
         elif event.widget["text"] == "Регистрация":
             global registration_window
+            global login_window
             registration_window = CreateFromMenuWindow(event.widget["text"]) # создание окна "регистрация"
             registration_window.protocol("WM_DELETE_WINDOW", lambda: RestartRootWindow(registration_window))
-            login_window.destroy()
+            login_window.withdraw()
 
             form = ttk.Frame(master=registration_window, style="TFrame")
             form.pack(anchor=CENTER, pady=250, ipadx=15, ipady=15)
@@ -298,9 +302,9 @@ def TextClick(event): # обработка кликера второго окн�
             font1 = font.Font(family="Arial", size=10, weight=NORMAL, underline=False, overstrike=False)
             login_label = ttk.Label(form, foreground="#0089EC", background="white", text="Есть аккаунт? Авторизация", font=font1, cursor="hand2")
             login_label.pack(anchor=S, padx=15, pady=2)
-            login_label.bind('<ButtonPress-1>', UserCircleClick)
             login_label.bind('<Enter>', OnTextUnderline)
             login_label.bind('<Leave>', OnTextUnderline)
+            login_label.bind('<ButtonPress-1>', UserCircleClick)
 
 def OnTextEntered(event): # обработка попадания курсора второго окна
     if event.type == '7':
@@ -435,6 +439,7 @@ def UserCircleClick(event): # создание второго окна
     elif user == accounts[0]: # иначе окно входа
         root.withdraw()
         global login_window
+        global registration_window
         if "registration_window" in locals():
             registration_window.destroy()
         login_window = Toplevel() # создание окна входа
@@ -468,9 +473,9 @@ def UserCircleClick(event): # создание второго окна
         registration_label.bind('<ButtonPress-1>', TextClick)
         registration_label.bind('<Enter>', OnTextUnderline)
         registration_label.bind('<Leave>', OnTextUnderline)
-        login_window.mainloop()
         if user != accounts[0]:
             RestartRootWindow(login_window)
+        login_window.mainloop()
 
 def DishWindowCreate(dish): # создание окна конкретного блюда
     window = Toplevel(master=root)
