@@ -5,7 +5,6 @@ from tkinter.messagebox import showinfo
 from random import randint
 import codecs
 import sqlite3
-import tkinter
 from tkinter import font
 from tkinter import colorchooser
 
@@ -199,7 +198,6 @@ def RestartRootWindow(window): # показ главного окна, если 
     root.update()
     root.update_idletasks()
     root.deiconify()
-    registration_window.destroy()
 
 def CreateFromMenuWindow(name):
     window = Toplevel(master=root)
