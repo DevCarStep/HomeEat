@@ -70,10 +70,10 @@ user = accounts[0] # текущий пользователь
  
 root = Tk()     # создаем корневой объект - окно
 root.title("HomeEat")     # устанавливаем заголовок окна
-root.iconbitmap(default=r"C:\Users\224\Desktop\HomeEat\HomeEat.ico")
+root.iconbitmap(default="HomeEat.ico")
 root.geometry("1800x1000")    # устанавливаем размеры окна
 root.resizable(False, True)
-logo = tkinter.PhotoImage(file=r"C:\Users\224\Desktop\HomeEat\IMG_0843 2.png")
+logo = tkinter.PhotoImage(file="IMG_0843 2.png")
 global registration_window
 def RandomCollor(): # генератор случайного цвета
     colorgen = lambda: randint(0,255)
@@ -83,7 +83,7 @@ user_color = RandomCollor()
 con = sqlite3.connect('userdata.db')
 cur = con.cursor()
 for row in con.execute("Select * from dishes"):
-    insert_photo = tkinter.PhotoImage(file=r"C:\Users\224\Desktop" + row[5])
+    insert_photo = tkinter.PhotoImage(file=row[5])
     dishes.append(Dish(row[1], row[2], row[3], row[4], insert_photo))
 
 upper_frame = ttk.Frame() # верхний фрейм первого окна
@@ -233,7 +233,7 @@ def TextClick(event): # обработка кликера второго окн�
             confidentiality_politics_window.grid_columnconfigure(0, weight = 1)
             confidentiality_politics_window.grid_rowconfigure(0, weight = 1)
 
-            confidential_politics_file = codecs.open(r"C:\Users\224\Desktop\HomeEat\confedintial_politics.txt", "r", "utf_8_sig")
+            confidential_politics_file = codecs.open("confedintial_politics.txt", "r", "utf_8_sig")
             content = confidential_politics_file.read()
 
             sc = Text(master=confidentiality_politics_window, wrap=WORD)
@@ -249,7 +249,7 @@ def TextClick(event): # обработка кликера второго окн�
             user_argeement_window.grid_columnconfigure(0, weight = 1)
             user_argeement_window.grid_rowconfigure(0, weight = 1)
 
-            user_argeement_file = codecs.open(r"C:\Users\224\Desktop\HomeEat\user_agreement.txt", "r", "utf_8_sig")
+            user_argeement_file = codecs.open("user_agreement.txt", "r", "utf_8_sig")
             content = user_argeement_file.read()
 
             sc = Text(master=user_argeement_window, wrap=WORD)
